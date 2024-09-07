@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.text import slugify
-
+import requests
+import json
 from mtg_utils.mtg import color_families, mana_cost_html
 
 
@@ -83,6 +84,167 @@ class Card(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_card_scryfall(self):
+        """
+        Searches a card by name on the Scryfall API. This function queries the Scryfall 'cards/named' API endpoint with an exact match search for the provided card name.
+        Returns a Scryfall card object if a card is found, otherwise returns None
+
+        Raises:
+            requests.RequestException: An error from the `requests` library indicating a problem with the network or the
+            fetch operation.
+        """
+        url = "https://api.scryfall.com/cards/named"
+        params = {'exact': self.name}
+        try:
+            response = requests.get(url, params=params)
+            if response.status_code == 200:
+                # The card exists, return card object
+                return response.json()
+        except requests.RequestException as e:
+            print(f"An error occurred: {e}")
+        return None
+    
+    def add_info(self, scryfall_card_obj):
+        """Add info to a the card model. Info as a Scryfall card object."""    
+        if 'oracle_id' in scryfall_card_obj:
+            self.oracle_id = scryfall_card_obj['oracle_id']
+
+        if 'layout' in scryfall_card_obj:
+            self.layout = scryfall_card_obj['layout']
+
+        if 'set' in scryfall_card_obj:
+            self.set_abbreviation = scryfall_card_obj['set']
+
+        if 'set_name' in scryfall_card_obj:
+            self.set_name = scryfall_card_obj['set_name']
+
+        if 'rarity' in scryfall_card_obj:
+            self.rarity = scryfall_card_obj['rarity']
+
+        if 'scryfall_uri' in scryfall_card_obj:
+            self.scryfall_url = scryfall_card_obj['scryfall_uri']
+
+        if 'rulings_url' in scryfall_card_obj:
+            self.rulings_url = scryfall_card_obj['rulings_url']
+
+        if 'prints_search_uri' in scryfall_card_obj:
+            self.prints_search_uri = scryfall_card_obj['prints_search_uri']
+
+        if 'legalities' in scryfall_card_obj:
+            FORMATS = ['pauper', 'standard', 'pioneer', 'modern', 'legacy', 'vintage', 'commander', 'penny', 'historic', 'brawl']
+            legalities = {}
+            for fo in FORMATS:
+                if scryfall_card_obj['legalities'][fo] == 'legal':
+                    legalities[fo] = True
+                else:
+                    legalities[fo] = False
+            self.standard_legal = legalities['standard']
+            self.historic_legal = legalities['historic']
+            self.pioneer_legal = legalities['pioneer']
+            self.modern_legal = legalities['modern']
+            self.pauper_legal = legalities['pauper']
+            self.penny_legal = legalities['penny']
+            self.legacy_legal = legalities['legacy']
+            self.vintage_legal = legalities['vintage']
+            self.brawl_legal = legalities['brawl']
+            self.commander_legal = legalities['commander']
+
+        if 'cmc' in scryfall_card_obj:
+            self.cmc = scryfall_card_obj['cmc']
+
+        if 'type_line' in scryfall_card_obj:
+            self.type_line = scryfall_card_obj['type_line']
+
+        if 'color_identity' in scryfall_card_obj:
+            self.color_identity = json.dumps(scryfall_card_obj['color_identity'])
+
+        if 'keywords' in scryfall_card_obj:
+            self.keywords = json.dumps(scryfall_card_obj['keywords'])
+
+        if 'mana_cost' in scryfall_card_obj:
+            self.mana_cost = scryfall_card_obj['mana_cost']
+
+        if 'oracle_text' in scryfall_card_obj:
+            self.oracle_text = scryfall_card_obj['oracle_text']
+
+        if 'colors' in scryfall_card_obj:
+            self.colors = json.dumps(scryfall_card_obj['colors'])
+
+        if 'power' in scryfall_card_obj:
+            self.power = scryfall_card_obj['power']
+
+        if 'toughness' in scryfall_card_obj:
+            self.toughness = scryfall_card_obj['toughness']
+
+        if 'flavor_text' in scryfall_card_obj:
+            self.flavor_text = scryfall_card_obj['flavor_text']
+
+        if 'image_uris' in scryfall_card_obj:
+            self.img_url = scryfall_card_obj['image_uris']['normal']
+            self.art_url = scryfall_card_obj['image_uris']['art_crop'] 
+
+        # If the card has multiple faces
+        if 'card_faces' in scryfall_card_obj:
+            self.faces = True
+            self.card_faces = json.dumps(scryfall_card_obj['card_faces'])
+            
+            try:
+                self.face1_name = scryfall_card_obj['card_faces'][0]['name']
+                self.face2_name = scryfall_card_obj['card_faces'][1]['name']
+            except Exception:
+                pass
+            
+            try:
+                self.face1_colors = json.dumps(scryfall_card_obj['card_faces'][0]['colors'])
+                self.face2_colors = json.dumps(scryfall_card_obj['card_faces'][1]['colors'])
+            except Exception:
+                pass
+
+            try:
+                self.face1_cmc = scryfall_card_obj['card_faces'][0]['cmc']
+                self.face2_cmc = scryfall_card_obj['card_faces'][1]['cmc']
+            except Exception:
+                pass
+
+            try:
+                self.face1_mana_cost = scryfall_card_obj['card_faces'][0]['mana_cost']
+                self.face2_mana_cost = scryfall_card_obj['card_faces'][1]['mana_cost']
+            except Exception:
+                pass
+
+            try:
+                self.face1_type_line = scryfall_card_obj['card_faces'][0]['type_line']
+                self.face2_type_line = scryfall_card_obj['card_faces'][1]['type_line']
+            except Exception:
+                pass
+
+            try:
+                self.face1_oracle_text = scryfall_card_obj['card_faces'][0]['oracle_text']
+                self.face2_oracle_text = scryfall_card_obj['card_faces'][1]['oracle_text']
+            except Exception:
+                pass
+
+            try:
+                self.face1_power = scryfall_card_obj['card_faces'][0]['power']
+                self.face2_power = scryfall_card_obj['card_faces'][1]['power']
+            except Exception:
+                pass
+
+            try:
+                self.face1_toughness = scryfall_card_obj['card_faces'][0]['toughness']
+                self.face2_toughness = scryfall_card_obj['card_faces'][1]['toughness']
+            except Exception:
+                pass
+
+            try:
+                self.face1_img_url = scryfall_card_obj['card_faces'][0]['image_uris']['normal']
+                self.face2_img_url = scryfall_card_obj['card_faces'][1]['image_uris']['normal']
+            except Exception:
+                pass
+            
+        # Save card instance
+        self.save()
 
     # def mana_symbols(self):
     #     """Method to return mana cost as HTML symbols"""
