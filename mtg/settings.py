@@ -37,6 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # External Django packages
+    'crispy_forms',  # django-crispy-forms
+    'crispy_bootstrap5',  # django-crispy-forms (Bootstrap 5)
+    'widget_tweaks',  # Django Widget Tweaks
+    'django_filters',
+    # Project apps
+    'mtg_decks.apps.MtgDecksConfig',  # Pauper Deck Library app
 ]
 
 MIDDLEWARE = [
@@ -121,3 +128,19 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Django Messages Config - To configure Django Messages to work with Bootstrap
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.DEBUG: 'info',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
+
+
+# Django Crispy Forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
