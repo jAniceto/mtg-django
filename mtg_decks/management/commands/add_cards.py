@@ -34,7 +34,8 @@ class Command(BaseCommand):
                 scryfall_card = card.get_scryfall()
 
                 # Add card info to DB
-                card.add_info(scryfall_card)
+                if scryfall_card:
+                    card.add_info(scryfall_card)
 
             else:
                 action_str = 'EXISTED'
