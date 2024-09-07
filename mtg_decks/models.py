@@ -292,6 +292,86 @@ class Deck(models.Model):
             self.slug = slugify(self.name)
         super(Deck, self).save(*args, **kwargs)
 
+    def add_info(self, deck_dict):
+        """Add deck info to deck object. Deck info is a dict of the following format:
+        deck_dict = {
+            "mainboard": [
+                [4, "All That Glitters"],
+                [4, "Ancient Den"],
+                ...
+            ],
+            "sideboard": [
+                [1, "Revoke Existence"],
+                [3, "Dust to Dust"],
+                ...
+            ],
+            "name": "Affinity Azorius",
+            "color": "azorius",
+            "tags": None,
+            "author": None,
+            "source": None,
+            "created_at": "2024/04/26"
+        }
+        """
+        # Add or update info
+        # self.format_name = 'Pauper'
+        self.family = deck_dict['color'].capitalize()
+        # self.description = None
+        self.source = deck_dict['author']
+        self.source_url = deck_dict['source']
+
+        # Clear decklists if needed
+        self.mainboard.clear()
+        self.sideboard.clear()
+
+        # Add mainboard
+        errors = []  # list of card names that caused and error
+        for card in deck_dict['mainboard']:
+            card_qty = card[0]
+            card_name = card[1].strip()
+            
+            # Get Card or create a new Card object
+            card, created = Card.objects.get_or_create(name=card_name)
+
+            if created:
+                # Get card info from Scryfall
+                scryfall_card = card.get_scryfall()
+
+                # Add card info to DB
+                if scryfall_card:
+                    card.add_info(scryfall_card)
+                else:
+                    errors.append(card_name)
+                    print('Error with', card_name)
+                    continue
+            
+            # Add card object to mainboard
+            CardMainboard.objects.create(mainboard=self, card=card, quantity=card_qty)
+
+        # Add sideboard
+        for card in deck_dict['sideboard']:
+            card_qty = card[0]
+            card_name = card[1].strip()
+            
+            # Get Card or create a new Card object
+            card, created = Card.objects.get_or_create(name=card_name)
+
+            if created:
+                # Get card info from Scryfall
+                scryfall_card = card.get_scryfall()
+
+                # Add card info to DB
+                if scryfall_card:
+                    card.add_info(scryfall_card)
+                else:
+                    errors.append(card_name)
+                    print('Error with', card_name)
+                    continue
+            
+            # Add card object to sideboard
+            CardSideboard.objects.create(sideboard=self, card=card, quantity=card_qty)
+        return self, errors
+
 
 class CardMainboard(models.Model):
     """Relationship between Cards and Mainboards. Through models for the ManyToMany Card-DeckMainboard relationship."""
