@@ -85,7 +85,7 @@ class Card(models.Model):
     def __str__(self):
         return self.name
     
-    def get_card_scryfall(self):
+    def get_scryfall(self):
         """
         Searches a card by name on the Scryfall API. This function queries the Scryfall 'cards/named' API endpoint with an exact match search for the provided card name.
         Returns a Scryfall card object if a card is found, otherwise returns None
