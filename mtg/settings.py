@@ -130,6 +130,10 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+AUTH_USER_MODEL = 'mtg_decks.User'
+LOGIN_REDIRECT_URL = 'index'
+
+
 # Django Messages Config - To configure Django Messages to work with Bootstrap
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
