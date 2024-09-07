@@ -21,5 +21,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     # Deck Library app
-    path('pauper-deck-library/', include('mtg_deck_library.urls')),
+    path('', include('mtg_decks.urls')),
 ]
