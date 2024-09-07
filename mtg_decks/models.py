@@ -319,6 +319,7 @@ class Deck(models.Model):
         # self.description = None
         self.source = deck_dict['author']
         self.source_url = deck_dict['source']
+        self.save()
 
         # Clear decklists if needed
         self.mainboard.clear()
