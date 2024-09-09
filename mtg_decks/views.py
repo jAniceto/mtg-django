@@ -1,6 +1,12 @@
 from django.shortcuts import render
+from mtg_decks.models import Deck
 
 
-# Create your views here.
 def index(request):
-    return render(request, 'mtg_decks/index.html')
+    """Homepage. List decks."""
+    decks = Deck.objects.all()
+
+    context = {
+        'decks': decks,
+    }
+    return render(request, 'mtg_decks/index.html', context)

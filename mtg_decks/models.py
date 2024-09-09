@@ -2,8 +2,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.text import slugify
+from django.utils import timezone
+
 import requests
 import json
+
 from mtg_utils.mtg import color_families, mana_cost_html
 
 
@@ -246,9 +249,9 @@ class Card(models.Model):
         # Save card instance
         self.save()
 
-    # def mana_symbols(self):
-    #     """Method to return mana cost as HTML symbols"""
-    #     return mana_cost_html(self.mana_cost)
+    def get_mana_cost_html(self):
+        """Method to return mana cost as HTML symbols"""
+        return mana_cost_html(self.mana_cost)
 
 
 class Deck(models.Model):
@@ -372,7 +375,22 @@ class Deck(models.Model):
             # Add card object to sideboard
             CardSideboard.objects.create(sideboard=self, card=card, quantity=card_qty)
         return self, errors
-
+    
+    def get_colors(self):
+        """Get a list of color codes for the deck, according to its color family."""
+        color_dict = color_families()
+        return color_dict[self.family.lower()]
+    
+    def get_days_since_created(self):
+        """Get number of days since the deck was created."""
+        time_diff = timezone.now() - self.created_at
+        return time_diff.days
+    
+    def get_days_since_updated(self):
+        """Get number of days since the deck was last updated."""
+        time_diff = timezone.now() - self.updated_at
+        return time_diff.days
+    
 
 class CardMainboard(models.Model):
     """Relationship between Cards and Mainboards. Through models for the ManyToMany Card-DeckMainboard relationship."""
@@ -382,6 +400,12 @@ class CardMainboard(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"{self.mainboard.name} - {self.quantity} {self.card.name}"
+
+    class Meta:
+        ordering = ['card__cmc']
+
 
 class CardSideboard(models.Model):
     """Relationship between Cards and Sideboards. Through models for the ManyToMany Card-DeckSideboard relationship."""
@@ -390,3 +414,9 @@ class CardSideboard(models.Model):
     quantity = models.PositiveIntegerField(default=1, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.sideboard.name} - {self.quantity} {self.card.name}"
+
+    class Meta:
+        ordering = ['card__cmc']
