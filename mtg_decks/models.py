@@ -8,6 +8,7 @@ import requests
 import json
 
 from mtg_utils.mtg import color_families, mana_cost_html
+from mtg_decks.charts import plot_deck_cmc_curve
 
 
 class User(AbstractUser):
@@ -390,6 +391,11 @@ class Deck(models.Model):
         """Get number of days since the deck was last updated."""
         time_diff = timezone.now() - self.updated_at
         return time_diff.days
+    
+    def cmc_chart(self):
+        """Create the CMC bar chart for a deck."""
+        fig = plot_deck_cmc_curve(self)
+        return fig.to_html(full_html=True, config={'staticPlot': True, 'displayModeBar': False})
     
 
 class CardMainboard(models.Model):
