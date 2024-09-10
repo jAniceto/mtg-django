@@ -1,0 +1,31 @@
+/* Show card image on hover */
+
+.hover-image {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: 1000;
+    pointer-events: none; /* Prevent the image from interfering with the mouse pointer */
+}
+
+.hover-link:hover + .hover-image,
+.hover-image:hover {
+    display: block;
+}
+
+/* Optional: Style the image and its position relative to the link */
+.hover-link:hover + .hover-image img {
+    width: 250px; /* Adjust as needed */
+    height: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hover-link {
+    position: relative;
+}
+
+.hover-image {
+    top: 0;
+    left: 80%; /* Adjust to position the image to the right with some space */
+}

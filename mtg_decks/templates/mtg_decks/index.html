@@ -43,7 +43,17 @@
                     {% for mainboard_item in deck.cardmainboard_set.all %}
                         <tr>
                             <td>{{ mainboard_item.quantity }}</td>
-                            <td>{{ mainboard_item.card.name }}</td>
+                            <td>
+                                <div class="position-relative">
+                                    <a href="#" class="link-body-emphasis text-decoration-none hover-link">
+                                        {{ mainboard_item.card.name }}
+                                    </a>
+                                    <div class="hover-image">
+                                        <!-- Card image -->
+                                        <img src="{{ mainboard_item.card.img_url }}" alt="{{ mainboard_item.card.name }} image">
+                                    </div>
+                                </div>
+                            </td>
                             <td class="text-end">{{ mainboard_item.card.get_mana_cost_html|safe }}</td>
                         </tr>
                     {% endfor %}
@@ -57,7 +67,17 @@
                     {% for sideboard_item in deck.cardsideboard_set.all %}
                         <tr>
                             <td>{{ sideboard_item.quantity }}</td>
-                            <td>{{ sideboard_item.card.name }}</td>
+                            <td>
+                                <div class="position-relative"></div>
+                                    <a href="#" class="link-body-emphasis text-decoration-none hover-link">
+                                        {{ sideboard_item.card.name }}
+                                    </a>
+                                    <div class="hover-image">
+                                        <!-- Card image -->
+                                        <img src="{{ sideboard_item.card.img_url }}" alt="{{ sideboard_item.card.name }} image">
+                                    </div>
+                                </div>
+                            </td>
                             <td class="text-end">{{ sideboard_item.card.get_mana_cost_html|safe }}</td>
                         </tr>
                     {% endfor %}
