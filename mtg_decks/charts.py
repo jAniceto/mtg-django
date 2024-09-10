@@ -26,7 +26,7 @@ def plot_deck_cmc_curve(deck):
     fig = px.bar(x=x_cmc, y=y_n_cards, text_auto=True, color_discrete_sequence=['#7B8A8B'])
 
     fig.update_layout(
-        title='CMC Distribution',
+        # title='CMC Distribution',
         xaxis_title='Converted mana cost',
         margin=dict(l=0, r=0, t=0, b=0),  # Remove margins
         plot_bgcolor='rgba(0,0,0,0)',
@@ -39,4 +39,7 @@ def plot_deck_cmc_curve(deck):
         ),
         yaxis=dict(visible=False),
     )
+
+    fig.update_traces(textposition='outside', cliponaxis=False)
+
     return fig
