@@ -1,10 +1,8 @@
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 
 import json
 
-from mtg_decks.models import Deck, CardMainboard, CardSideboard
+from mtg_decks.models import Deck
 
 
 EXAMPLE_DECKS = [

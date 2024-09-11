@@ -2,9 +2,6 @@ import plotly.express as px
 
 
 def plot_deck_cmc_curve(deck):
-    x = [1, 2, 3, 4, 5]
-    y = [5, 6, 2, 8, 6]
-
     # mainboard = CardMainboard.objects.filter(mainboard=deck)
     # mainboard = deck.cardmainboard_set.all()
     mainboard = deck.cardmainboard_set.exclude(card__type_line__icontains='Land')  # exclude Lands
