@@ -12,16 +12,18 @@ from mtg_decks.charts import plot_deck_cmc_curve
 
 class User(AbstractUser):
     """User model."""
+
     pass
 
 
 class Card(models.Model):
     """Card model. Containing card information."""
+
     # Card identification
     name = models.CharField(max_length=150)
     oracle_id = models.CharField(max_length=250, blank=True, null=True)
     layout = models.CharField(max_length=100)
-    
+
     # Print fields
     set_abbreviation = models.CharField(max_length=10, blank=True, null=True)
     set_name = models.CharField(max_length=100, blank=True, null=True)
@@ -33,7 +35,7 @@ class Card(models.Model):
     # Links
     scryfall_url = models.URLField(blank=True)
     rulings_url = models.URLField(blank=True)
-    prints_search_uri  = models.URLField(blank=True)
+    prints_search_uri = models.URLField(blank=True)
 
     # Legalities
     standard_legal = models.BooleanField(default=False)
@@ -50,20 +52,24 @@ class Card(models.Model):
     # Gameplay fields (main card face)
     cmc = models.DecimalField(max_digits=3, decimal_places=1, blank=True, null=True)
     type_line = models.CharField(max_length=100, blank=True, null=True)
-    color_identity = models.TextField(blank=True, null=True)  # JSON-serialized (text) version of list
+    color_identity = models.TextField(
+        blank=True, null=True
+    )  # JSON-serialized (text) version of list
     keywords = models.TextField(blank=True, null=True)  # JSON-serialized (text) version of list
     mana_cost = models.CharField(max_length=50, blank=True, null=True)
     oracle_text = models.TextField(blank=True)
     colors = models.TextField(blank=True, null=True)  # JSON-serialized (text) version of list
     power = models.CharField(max_length=50, blank=True, null=True)
     toughness = models.CharField(max_length=50, blank=True, null=True)
-    
+
     # Other faces
     faces = models.BooleanField(default=False)
     card_faces = models.TextField(blank=True, null=True)  # JSON-serialized (text) version of list
     # Face 1
     face1_name = models.CharField(max_length=100, blank=True, null=True)
-    face1_colors = models.CharField(max_length=100, blank=True, null=True)  # JSON-serialized (text) version of list
+    face1_colors = models.CharField(
+        max_length=100, blank=True, null=True
+    )  # JSON-serialized (text) version of list
     face1_cmc = models.DecimalField(max_digits=3, decimal_places=1, blank=True, null=True)
     face1_mana_cost = models.CharField(max_length=50, blank=True, null=True)
     face1_type_line = models.CharField(max_length=100, blank=True, null=True)
@@ -87,7 +93,7 @@ class Card(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def get_scryfall(self):
         """
         Searches a card by name on the Scryfall API. This function queries the Scryfall 'cards/named' API endpoint with an exact match search for the provided card name.
@@ -97,7 +103,7 @@ class Card(models.Model):
             requests.RequestException: An error from the `requests` library indicating a problem with the network or the
             fetch operation.
         """
-        url = "https://api.scryfall.com/cards/named"
+        url = 'https://api.scryfall.com/cards/named'
         params = {'exact': self.name}
         try:
             response = requests.get(url, params=params)
@@ -105,11 +111,11 @@ class Card(models.Model):
                 # The card exists, return card object
                 return response.json()
         except requests.RequestException as e:
-            print(f"An error occurred: {e}")
+            print(f'An error occurred: {e}')
         return None
-    
+
     def add_info(self, scryfall_card_obj):
-        """Add info to a the card model. Info as a Scryfall card object."""    
+        """Add info to a the card model. Info as a Scryfall card object."""
         if 'oracle_id' in scryfall_card_obj:
             self.oracle_id = scryfall_card_obj['oracle_id']
 
@@ -135,7 +141,18 @@ class Card(models.Model):
             self.prints_search_uri = scryfall_card_obj['prints_search_uri']
 
         if 'legalities' in scryfall_card_obj:
-            FORMATS = ['pauper', 'standard', 'pioneer', 'modern', 'legacy', 'vintage', 'commander', 'penny', 'historic', 'brawl']
+            FORMATS = [
+                'pauper',
+                'standard',
+                'pioneer',
+                'modern',
+                'legacy',
+                'vintage',
+                'commander',
+                'penny',
+                'historic',
+                'brawl',
+            ]
             legalities = {}
             for fo in FORMATS:
                 if scryfall_card_obj['legalities'][fo] == 'legal':
@@ -185,19 +202,19 @@ class Card(models.Model):
 
         if 'image_uris' in scryfall_card_obj:
             self.img_url = scryfall_card_obj['image_uris']['normal']
-            self.art_url = scryfall_card_obj['image_uris']['art_crop'] 
+            self.art_url = scryfall_card_obj['image_uris']['art_crop']
 
         # If the card has multiple faces
         if 'card_faces' in scryfall_card_obj:
             self.faces = True
             self.card_faces = json.dumps(scryfall_card_obj['card_faces'])
-            
+
             try:
                 self.face1_name = scryfall_card_obj['card_faces'][0]['name']
                 self.face2_name = scryfall_card_obj['card_faces'][1]['name']
             except Exception:
                 pass
-            
+
             try:
                 self.face1_colors = json.dumps(scryfall_card_obj['card_faces'][0]['colors'])
                 self.face2_colors = json.dumps(scryfall_card_obj['card_faces'][1]['colors'])
@@ -245,7 +262,7 @@ class Card(models.Model):
                 self.face2_img_url = scryfall_card_obj['card_faces'][1]['image_uris']['normal']
             except Exception:
                 pass
-            
+
         # Save card instance
         self.save()
 
@@ -262,6 +279,7 @@ class Card(models.Model):
 
 class Deck(models.Model):
     """Deck model. Containing deck information."""
+
     name = models.CharField(max_length=50)
     slug = models.SlugField()
     FORMAT_CHOICES = (
@@ -274,15 +292,20 @@ class Deck(models.Model):
         ('Legacy', 'Legacy'),
         ('Vintage', 'Vintage'),
         ('Brawl', 'Brawl'),
-        ('Commander', 'Commander')
+        ('Commander', 'Commander'),
     )
     format_name = models.CharField(max_length=50, choices=FORMAT_CHOICES, default='Pauper')
     FAMILY_CHOICES = (
-        (k.capitalize(), k.capitalize()) for k, v in color_families().items()  # e.g., ('Boros', 'Boros'),
+        (k.capitalize(), k.capitalize())
+        for k, v in color_families().items()  # e.g., ('Boros', 'Boros'),
     )
     family = models.CharField(max_length=50, choices=FAMILY_CHOICES, blank=True, null=True)
-    mainboard = models.ManyToManyField(Card, through="CardMainboard", related_name='mainboards', blank=True)
-    sideboard = models.ManyToManyField(Card, through="CardSideboard", related_name='sideboards', blank=True)
+    mainboard = models.ManyToManyField(
+        Card, through='CardMainboard', related_name='mainboards', blank=True
+    )
+    sideboard = models.ManyToManyField(
+        Card, through='CardSideboard', related_name='sideboards', blank=True
+    )
     description = models.TextField(blank=True, null=True)
     source = models.CharField(max_length=150, blank=True, null=True)
     source_url = models.URLField(blank=True, null=True)
@@ -295,7 +318,7 @@ class Deck(models.Model):
         ordering = ['-created_at', 'name']
 
     def __str__(self):
-        return f"{self.name}"
+        return f'{self.name}'
 
     def save(self, *args, **kwargs):
         """Override save method to automatically create a slug for every new object"""
@@ -345,7 +368,7 @@ class Deck(models.Model):
         for card in deck_dict['mainboard']:
             card_qty = card[0]
             card_name = card[1].strip()
-            
+
             # Get Card or create a new Card object
             card, created = Card.objects.get_or_create(name=card_name)
 
@@ -360,7 +383,7 @@ class Deck(models.Model):
                     errors.append(card_name)
                     print('Error with', card_name)
                     continue
-            
+
             # Add card object to mainboard
             CardMainboard.objects.create(mainboard=self, card=card, quantity=card_qty)
 
@@ -368,7 +391,7 @@ class Deck(models.Model):
         for card in deck_dict['sideboard']:
             card_qty = card[0]
             card_name = card[1].strip()
-            
+
             # Get Card or create a new Card object
             card, created = Card.objects.get_or_create(name=card_name)
 
@@ -383,11 +406,11 @@ class Deck(models.Model):
                     errors.append(card_name)
                     print('Error with', card_name)
                     continue
-            
+
             # Add card object to sideboard
             CardSideboard.objects.create(sideboard=self, card=card, quantity=card_qty)
         return self, errors
-    
+
     def get_colors(self):
         """Get a list of color codes for the deck, according to its color family."""
         color_dict = color_families()
@@ -395,25 +418,26 @@ class Deck(models.Model):
             return color_dict[self.family.lower()]
         except AttributeError:
             return None
-    
+
     def get_days_since_created(self):
         """Get number of days since the deck was created."""
         time_diff = timezone.now() - self.created_at
         return time_diff.days
-    
+
     def get_days_since_updated(self):
         """Get number of days since the deck was last updated."""
         time_diff = timezone.now() - self.updated_at
         return time_diff.days
-    
+
     def cmc_chart(self):
         """Create the CMC bar chart for a deck."""
         fig = plot_deck_cmc_curve(self)
         return fig.to_html(full_html=True, config={'staticPlot': True, 'displayModeBar': False})
-    
+
 
 class CardMainboard(models.Model):
     """Relationship between Cards and Mainboards. Through models for the ManyToMany Card-DeckMainboard relationship."""
+
     mainboard = models.ForeignKey(Deck, on_delete=models.CASCADE)
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1, blank=True)
@@ -421,7 +445,7 @@ class CardMainboard(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.mainboard.name} - {self.quantity} {self.card.name}"
+        return f'{self.mainboard.name} - {self.quantity} {self.card.name}'
 
     class Meta:
         ordering = ['card__cmc']
@@ -429,6 +453,7 @@ class CardMainboard(models.Model):
 
 class CardSideboard(models.Model):
     """Relationship between Cards and Sideboards. Through models for the ManyToMany Card-DeckSideboard relationship."""
+
     sideboard = models.ForeignKey(Deck, on_delete=models.CASCADE)
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1, blank=True)
@@ -436,7 +461,7 @@ class CardSideboard(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.sideboard.name} - {self.quantity} {self.card.name}"
+        return f'{self.sideboard.name} - {self.quantity} {self.card.name}'
 
     class Meta:
         ordering = ['card__cmc']

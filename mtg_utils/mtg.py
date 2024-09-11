@@ -7,15 +7,40 @@ import collections
 
 def color_families():
     """Dictionary to convert deck family to a list of color codes"""
-    return collections.OrderedDict(white=['w'], blue=['u'], black=['b'], red=['r'], green=['g'], selesnya=['w', 'g'],
-              orzhov=['w', 'b'], boros=['w', 'r'], azorius=['w', 'u'], dimir=['u', 'b'],
-              rakdos=['b', 'r'], golgari=['b', 'g'], izzet=['u', 'r'], simic=['u', 'g'],
-              gruul=['r', 'g'], naya=['w', 'r', 'g'], esper=['w', 'u', 'b'], grixis=['u', 'b', 'r'],
-              jund=['b', 'r', 'g'], bant=['w', 'u', 'g'], abzan=['w', 'b', 'g'],
-              temur=['u', 'r', 'g'], jeskai=['w', 'u', 'r'], mardu=['w', 'b', 'r'],
-              sultai=['u', 'b', 'g'], glint=['u', 'b', 'r', 'g'], dune=['w', 'b', 'r', 'g'],
-              ink=['w', 'u', 'r', 'g'], whitch=['w', 'u', 'b', 'g'], yore=['w', 'u', 'b', 'r'],
-              domain=['w', 'u', 'b', 'r', 'g'], colorless=['c'])
+    return collections.OrderedDict(
+        white=['w'],
+        blue=['u'],
+        black=['b'],
+        red=['r'],
+        green=['g'],
+        selesnya=['w', 'g'],
+        orzhov=['w', 'b'],
+        boros=['w', 'r'],
+        azorius=['w', 'u'],
+        dimir=['u', 'b'],
+        rakdos=['b', 'r'],
+        golgari=['b', 'g'],
+        izzet=['u', 'r'],
+        simic=['u', 'g'],
+        gruul=['r', 'g'],
+        naya=['w', 'r', 'g'],
+        esper=['w', 'u', 'b'],
+        grixis=['u', 'b', 'r'],
+        jund=['b', 'r', 'g'],
+        bant=['w', 'u', 'g'],
+        abzan=['w', 'b', 'g'],
+        temur=['u', 'r', 'g'],
+        jeskai=['w', 'u', 'r'],
+        mardu=['w', 'b', 'r'],
+        sultai=['u', 'b', 'g'],
+        glint=['u', 'b', 'r', 'g'],
+        dune=['w', 'b', 'r', 'g'],
+        ink=['w', 'u', 'r', 'g'],
+        whitch=['w', 'u', 'b', 'g'],
+        yore=['w', 'u', 'b', 'r'],
+        domain=['w', 'u', 'b', 'r', 'g'],
+        colorless=['c'],
+    )
 
 
 def symbols_html():
@@ -88,7 +113,9 @@ def mana_cost_html(mana_cost):
     if mana_cost is not None:
         mana_list = [e + '}' for e in mana_cost.split('}') if e]  # split symbols
         mana_list2 = []
-        [mana_list2.extend(idx.split(' // ')) for idx in mana_list]  # detect double-faced cards and split on ' // '
+        [
+            mana_list2.extend(idx.split(' // ')) for idx in mana_list
+        ]  # detect double-faced cards and split on ' // '
         for symbol in mana_list2:
             if symbol == '':
                 code += ' // '

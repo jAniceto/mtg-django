@@ -1,1 +1,7 @@
-line-length = 88
+line-length = 99
+
+exclude = ["manage.py"]
+
+[format]
+# Use double quotes for strings.
+quote-style = "single"

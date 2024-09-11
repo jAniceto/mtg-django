@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('mtg_decks', '0001_initial'),
     ]
@@ -14,7 +13,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Card',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
+                    ),
+                ),
                 ('name', models.CharField(max_length=150)),
                 ('oracle_id', models.CharField(blank=True, max_length=250, null=True)),
                 ('layout', models.CharField(max_length=100)),
@@ -37,7 +41,10 @@ class Migration(migrations.Migration):
                 ('vintage_legal', models.BooleanField(default=False)),
                 ('brawl_legal', models.BooleanField(default=False)),
                 ('commander_legal', models.BooleanField(default=False)),
-                ('cmc', models.DecimalField(blank=True, decimal_places=1, max_digits=3, null=True)),
+                (
+                    'cmc',
+                    models.DecimalField(blank=True, decimal_places=1, max_digits=3, null=True),
+                ),
                 ('type_line', models.CharField(blank=True, max_length=100, null=True)),
                 ('color_identity', models.TextField(blank=True, null=True)),
                 ('keywords', models.TextField(blank=True, null=True)),
@@ -50,7 +57,10 @@ class Migration(migrations.Migration):
                 ('card_faces', models.TextField(blank=True, null=True)),
                 ('face1_name', models.CharField(blank=True, max_length=100, null=True)),
                 ('face1_colors', models.CharField(blank=True, max_length=100, null=True)),
-                ('face1_cmc', models.DecimalField(blank=True, decimal_places=1, max_digits=3, null=True)),
+                (
+                    'face1_cmc',
+                    models.DecimalField(blank=True, decimal_places=1, max_digits=3, null=True),
+                ),
                 ('face1_mana_cost', models.CharField(blank=True, max_length=50, null=True)),
                 ('face1_type_line', models.CharField(blank=True, max_length=100, null=True)),
                 ('face1_oracle_text', models.TextField(blank=True, null=True)),
@@ -59,7 +69,10 @@ class Migration(migrations.Migration):
                 ('face1_img_url', models.URLField(blank=True, null=True)),
                 ('face2_name', models.CharField(blank=True, max_length=100, null=True)),
                 ('face2_colors', models.CharField(blank=True, max_length=100, null=True)),
-                ('face2_cmc', models.DecimalField(blank=True, decimal_places=1, max_digits=3, null=True)),
+                (
+                    'face2_cmc',
+                    models.DecimalField(blank=True, decimal_places=1, max_digits=3, null=True),
+                ),
                 ('face2_mana_cost', models.CharField(blank=True, max_length=50, null=True)),
                 ('face2_type_line', models.CharField(blank=True, max_length=100, null=True)),
                 ('face2_oracle_text', models.TextField(blank=True, null=True)),
@@ -74,49 +87,153 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CardMainboard',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
+                    ),
+                ),
                 ('quantity', models.PositiveIntegerField(blank=True, default=1)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('card', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mtg_decks.card')),
+                (
+                    'card',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to='mtg_decks.card'
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
             name='CardSideboard',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
+                    ),
+                ),
                 ('quantity', models.PositiveIntegerField(blank=True, default=1)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('card', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mtg_decks.card')),
+                (
+                    'card',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to='mtg_decks.card'
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
             name='Deck',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
+                    ),
+                ),
                 ('name', models.CharField(max_length=50)),
                 ('slug', models.SlugField()),
-                ('format_name', models.CharField(choices=[('Standard', 'Standard'), ('Historic', 'Historic'), ('Pioneer', 'Pioneer'), ('Modern', 'Modern'), ('Pauper', 'Pauper'), ('Penny', 'Penny'), ('Legacy', 'Legacy'), ('Vintage', 'Vintage'), ('Brawl', 'Brawl'), ('Commander', 'Commander')], default='Pauper', max_length=50)),
-                ('family', models.CharField(blank=True, choices=[('White', 'White'), ('Blue', 'Blue'), ('Black', 'Black'), ('Red', 'Red'), ('Green', 'Green'), ('Selesnya', 'Selesnya'), ('Orzhov', 'Orzhov'), ('Boros', 'Boros'), ('Azorius', 'Azorius'), ('Dimir', 'Dimir'), ('Rakdos', 'Rakdos'), ('Golgari', 'Golgari'), ('Izzet', 'Izzet'), ('Simic', 'Simic'), ('Gruul', 'Gruul'), ('Naya', 'Naya'), ('Esper', 'Esper'), ('Grixis', 'Grixis'), ('Jund', 'Jund'), ('Bant', 'Bant'), ('Abzan', 'Abzan'), ('Temur', 'Temur'), ('Jeskai', 'Jeskai'), ('Mardu', 'Mardu'), ('Sultai', 'Sultai'), ('Glint', 'Glint'), ('Dune', 'Dune'), ('Ink', 'Ink'), ('Whitch', 'Whitch'), ('Yore', 'Yore'), ('Domain', 'Domain'), ('Colorless', 'Colorless')], max_length=50, null=True)),
+                (
+                    'format_name',
+                    models.CharField(
+                        choices=[
+                            ('Standard', 'Standard'),
+                            ('Historic', 'Historic'),
+                            ('Pioneer', 'Pioneer'),
+                            ('Modern', 'Modern'),
+                            ('Pauper', 'Pauper'),
+                            ('Penny', 'Penny'),
+                            ('Legacy', 'Legacy'),
+                            ('Vintage', 'Vintage'),
+                            ('Brawl', 'Brawl'),
+                            ('Commander', 'Commander'),
+                        ],
+                        default='Pauper',
+                        max_length=50,
+                    ),
+                ),
+                (
+                    'family',
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ('White', 'White'),
+                            ('Blue', 'Blue'),
+                            ('Black', 'Black'),
+                            ('Red', 'Red'),
+                            ('Green', 'Green'),
+                            ('Selesnya', 'Selesnya'),
+                            ('Orzhov', 'Orzhov'),
+                            ('Boros', 'Boros'),
+                            ('Azorius', 'Azorius'),
+                            ('Dimir', 'Dimir'),
+                            ('Rakdos', 'Rakdos'),
+                            ('Golgari', 'Golgari'),
+                            ('Izzet', 'Izzet'),
+                            ('Simic', 'Simic'),
+                            ('Gruul', 'Gruul'),
+                            ('Naya', 'Naya'),
+                            ('Esper', 'Esper'),
+                            ('Grixis', 'Grixis'),
+                            ('Jund', 'Jund'),
+                            ('Bant', 'Bant'),
+                            ('Abzan', 'Abzan'),
+                            ('Temur', 'Temur'),
+                            ('Jeskai', 'Jeskai'),
+                            ('Mardu', 'Mardu'),
+                            ('Sultai', 'Sultai'),
+                            ('Glint', 'Glint'),
+                            ('Dune', 'Dune'),
+                            ('Ink', 'Ink'),
+                            ('Whitch', 'Whitch'),
+                            ('Yore', 'Yore'),
+                            ('Domain', 'Domain'),
+                            ('Colorless', 'Colorless'),
+                        ],
+                        max_length=50,
+                        null=True,
+                    ),
+                ),
                 ('description', models.TextField(blank=True, null=True)),
                 ('source', models.CharField(blank=True, max_length=150, null=True)),
                 ('source_url', models.URLField(blank=True, null=True)),
                 ('private', models.BooleanField(default=False)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('mainboard', models.ManyToManyField(blank=True, related_name='mainboards', through='mtg_decks.CardMainboard', to='mtg_decks.card')),
-                ('sideboard', models.ManyToManyField(blank=True, related_name='sideboards', through='mtg_decks.CardSideboard', to='mtg_decks.card')),
+                (
+                    'mainboard',
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name='mainboards',
+                        through='mtg_decks.CardMainboard',
+                        to='mtg_decks.card',
+                    ),
+                ),
+                (
+                    'sideboard',
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name='sideboards',
+                        through='mtg_decks.CardSideboard',
+                        to='mtg_decks.card',
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
             model_name='cardsideboard',
             name='sideboard',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mtg_decks.deck'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to='mtg_decks.deck'
+            ),
         ),
         migrations.AddField(
             model_name='cardmainboard',
             name='mainboard',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mtg_decks.deck'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to='mtg_decks.deck'
+            ),
         ),
     ]

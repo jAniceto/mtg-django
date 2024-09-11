@@ -136,6 +136,7 @@ LOGIN_REDIRECT_URL = 'index'
 
 # Django Messages Config - To configure Django Messages to work with Bootstrap
 from django.contrib.messages import constants as messages
+
 MESSAGE_TAGS = {
     messages.DEBUG: 'info',
     messages.INFO: 'info',
@@ -146,5 +147,5 @@ MESSAGE_TAGS = {
 
 
 # Django Crispy Forms
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'

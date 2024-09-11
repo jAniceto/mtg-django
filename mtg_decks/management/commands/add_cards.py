@@ -17,21 +17,21 @@ EXAMPLE_CARDS = [
 
 
 class Command(BaseCommand):
-    help = "Adds cards to the Database."
+    help = 'Adds cards to the Database.'
 
     def add_arguments(self, parser):
         parser.add_argument('-f', '--filepath', type=str, help='Path to cards JSON file.')
 
     def handle(self, *args, **options):
         json_file = options['filepath']
-        
+
         if json_file:
             # Load decks file
             with open(json_file, 'r') as f:
                 cards = json.load(f)
         else:
             cards = EXAMPLE_CARDS
-        
+
         # Add cards
         n_created = 0
         for card_name in cards:
@@ -51,7 +51,7 @@ class Command(BaseCommand):
 
             else:
                 action_str = 'EXISTED'
-            
-            self.stdout.write(f"{action_str} -- {card.name}")
-        
-        self.stdout.write(f"Created {n_created} out of {len(cards)} cards.")
+
+            self.stdout.write(f'{action_str} -- {card.name}')
+
+        self.stdout.write(f'Created {n_created} out of {len(cards)} cards.')

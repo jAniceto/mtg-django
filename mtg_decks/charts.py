@@ -8,10 +8,10 @@ def plot_deck_cmc_curve(deck):
     quantities = list(mainboard.values_list('quantity', flat=True))
     cmcs = list(mainboard.values_list('card__cmc', flat=True))
     cmcs = [int(cmc) for cmc in cmcs]
-    
+
     x_cmc = []
     y_n_cards = []
-    for i in range(max(cmcs)+1):
+    for i in range(max(cmcs) + 1):
         x_cmc.append(i)
 
         n_card = 0
@@ -29,12 +29,12 @@ def plot_deck_cmc_curve(deck):
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
         height=250,
-        xaxis = dict(
-            tickmode = 'linear',
+        xaxis=dict(
+            tickmode='linear',
             # tick0 = 0,
-            dtick = 1,
+            dtick=1,
             showline=True,
-            linecolor='black'
+            linecolor='black',
         ),
         yaxis=dict(visible=False),
     )
