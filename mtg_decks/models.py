@@ -292,6 +292,9 @@ class Deck(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-created_at', 'name']
+
     def __str__(self):
         return f"{self.name}"
 
@@ -325,7 +328,10 @@ class Deck(models.Model):
         """
         # Add or update info
         # self.format_name = 'Pauper'
-        self.family = deck_dict['color'].capitalize()
+        try:
+            self.family = deck_dict['color'].capitalize()
+        except AttributeError:
+            pass
         # self.description = None
         self.source = deck_dict['author']
         self.source_url = deck_dict['source']
@@ -386,7 +392,10 @@ class Deck(models.Model):
     def get_colors(self):
         """Get a list of color codes for the deck, according to its color family."""
         color_dict = color_families()
-        return color_dict[self.family.lower()]
+        try:
+            return color_dict[self.family.lower()]
+        except AttributeError:
+            return None
     
     def get_days_since_created(self):
         """Get number of days since the deck was created."""
