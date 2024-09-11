@@ -28,14 +28,16 @@ def plot_deck_cmc_curve(deck):
     fig.update_layout(
         # title='CMC Distribution',
         xaxis_title='Converted mana cost',
-        margin=dict(l=0, r=0, t=0, b=0),  # Remove margins
+        margin=dict(l=0, r=0, t=5, b=0),  # Remove margins
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
         height=250,
         xaxis = dict(
             tickmode = 'linear',
             # tick0 = 0,
-            dtick = 1
+            dtick = 1,
+            showline=True,
+            linecolor='black'
         ),
         yaxis=dict(visible=False),
     )
