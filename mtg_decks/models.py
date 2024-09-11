@@ -254,6 +254,12 @@ class Card(models.Model):
         """Method to return mana cost as HTML symbols"""
         return mana_cost_html(self.mana_cost)
 
+    def is_land(self):
+        """Returns True if Card is a Land, otherwise returns False."""
+        if 'Land' in self.type_line:
+            return True
+        return False
+
 
 class Deck(models.Model):
     """Deck model. Containing deck information."""
