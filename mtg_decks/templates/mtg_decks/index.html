@@ -38,7 +38,7 @@
         <!-- Deck info -->
         <div class="row">
             <!-- Decklist (part 1)-->
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <table style="width:100%">
                     {% for mainboard_item in deck.cardmainboard_set.all %}
                         <tr>
@@ -61,7 +61,7 @@
             </div>
 
             <!-- Decklist (part 2)-->
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <h4>Sideboard</h4>
                 <table style="width:100%">
                     {% for sideboard_item in deck.cardsideboard_set.all %}
@@ -90,12 +90,14 @@
                 <div>
                     {{ deck.cmc_chart|safe }}
                 </div>
+
+                <!-- Info and actions -->
+                <div class="d-grid gap-2 mt-4">
+                    <a class="btn btn-outline-secondary" href="#" role="button">Download .txt</a>
+                    <a class="btn btn-outline-secondary" href="#" role="button">Copy to clipboard</a>
+                </div>
             </div>
             
-            <!-- Actions-->
-            <div class="col-md-3">
-
-            </div>
         </div>
 
     </div>
