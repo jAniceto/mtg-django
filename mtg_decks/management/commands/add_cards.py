@@ -7,18 +7,32 @@ import json
 from mtg_decks.models import Card
 
 
+# Example cards
+EXAMPLE_CARDS = [
+    'Ancient Den',
+    'Rancor',
+    'Forest',
+    'Preordain',
+    'Ponder',
+    'Brainstorm',
+]
+
+
 class Command(BaseCommand):
     help = "Adds cards to the Database."
 
+    def add_arguments(self, parser):
+        parser.add_argument('-f', '--filepath', type=str, help='Path to cards JSON file.')
+
     def handle(self, *args, **options):
-        cards = [
-            'Ancient Den',
-            'Rancor',
-            'Forest',
-            'Preordain',
-            'Ponder',
-            'Brainstorm',
-        ]
+        json_file = options['filepath']
+        
+        if json_file:
+            # Load decks file
+            with open(json_file, 'r') as f:
+                cards = json.load(f)
+        else:
+            cards = EXAMPLE_CARDS
         
         # Add cards
         n_created = 0
