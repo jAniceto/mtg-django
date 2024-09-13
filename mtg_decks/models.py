@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
@@ -410,6 +412,44 @@ class Deck(models.Model):
             # Add card object to sideboard
             CardSideboard.objects.create(sideboard=self, card=card, quantity=card_qty)
         return self, errors
+    
+    def get_categorized_mainboard(self):
+        """Returns a dict of the mainboard card categorized by card type (creature, artifact, etc)."""
+        mainboard = self.cardmainboard_set.all()
+        categorized_mainboard = OrderedDict([
+            ('creature', []),
+            ('instant', []),
+            ('sorcery', []),
+            ('artifact', []),
+            ('enchantment', []),
+            ('land', []),
+            ('other', []),
+        ])
+        # categorized_mainboard = {
+        #     'creature': [],
+        #     'instant': [],
+        #     'sorcery': [],
+        #     'artifact': [],
+        #     'enchantment': [],
+        #     'land': [],
+        #     'other': [],
+        # }
+        for cardmb in mainboard:
+            if 'Creature' in cardmb.card.type_line:
+                categorized_mainboard['creature'].append(cardmb)
+            elif 'Instant' in cardmb.card.type_line:
+                categorized_mainboard['instant'].append(cardmb)
+            elif 'Sorcery' in cardmb.card.type_line:
+                categorized_mainboard['sorcery'].append(cardmb)
+            elif 'Artifact' in cardmb.card.type_line:
+                categorized_mainboard['artifact'].append(cardmb)
+            elif 'Enchantment' in cardmb.card.type_line:
+                categorized_mainboard['enchantment'].append(cardmb)
+            elif 'Land' in cardmb.card.type_line:
+                categorized_mainboard['land'].append(cardmb)
+            else:
+                categorized_mainboard['other'].append(cardmb)
+        return categorized_mainboard
 
     def get_colors(self):
         """Get a list of color codes for the deck, according to its color family."""
