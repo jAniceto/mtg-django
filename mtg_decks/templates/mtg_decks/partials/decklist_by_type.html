@@ -78,7 +78,12 @@
         <!-- Info and actions -->
         <div class="d-grid gap-2 mt-4 d-md-flex justify-content-md-center">
             <a class="btn btn-outline-secondary w-100" href="{% url 'download_deck_txt' deck.pk %}" role="button">Download .txt</a>
-            <a class="btn btn-outline-secondary w-100" href="#" role="button">Copy to clipboard</a>
+            
+            <button class="btn btn-outline-secondary w-100"
+                hx-get="{% url 'copy_decklist' deck.pk %}" hx-target="#decklist-text" hx-swap="innerHTML"
+                hx-on:htmx:after-request="copyDecklist(); this.innerText='Copied!'">
+                Copy to clipboard
+            </button>
         </div>
 
     </div>

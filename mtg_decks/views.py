@@ -24,3 +24,10 @@ def download_deck_txt(request, deck_pk):
     response = HttpResponse(text_decklist, content_type='application/text charset=utf-8')
     response['Content-Disposition'] = f'attachment; filename="{filename}.txt"'
     return response
+
+
+def copy_decklist(request, deck_pk):
+    """Download a decklist in .txt."""
+    deck = get_object_or_404(Deck, pk=deck_pk)
+    text_decklist = deck.to_string()
+    return HttpResponse(text_decklist)

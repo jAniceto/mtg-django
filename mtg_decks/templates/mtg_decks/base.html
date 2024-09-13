@@ -51,6 +51,19 @@
     <!-- Custom JS -->
     <!-- <script type="text/javascript" src="{% static 'mtg_decks/scripts.js' %}"></script> -->
 
+    <script>
+      function copyDecklist() {
+          // Get the text from the hidden div
+          var text = document.getElementById("decklist-text").innerText;
+          // Use the Clipboard API to copy the text
+          navigator.clipboard.writeText(text).then(function() {
+              console.log('Decklist copied!');
+          }).catch(function(error) {
+              console.error('Error copying decklist: ', error);
+          });
+      }
+  </script>
+
     <!-- Initialize Bootstrap components -->
     <script>
       const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
