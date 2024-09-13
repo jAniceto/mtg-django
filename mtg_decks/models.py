@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import math
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -425,15 +426,6 @@ class Deck(models.Model):
             ('land', []),
             ('other', []),
         ])
-        # categorized_mainboard = {
-        #     'creature': [],
-        #     'instant': [],
-        #     'sorcery': [],
-        #     'artifact': [],
-        #     'enchantment': [],
-        #     'land': [],
-        #     'other': [],
-        # }
         for cardmb in mainboard:
             if 'Creature' in cardmb.card.type_line:
                 categorized_mainboard['creature'].append(cardmb)
@@ -450,6 +442,16 @@ class Deck(models.Model):
             else:
                 categorized_mainboard['other'].append(cardmb)
         return categorized_mainboard
+    
+    def max_cards_col(self):
+        """Estimates how many unique cards should appear in each of the two decklist columns
+        so that columns are of similar height. 
+        max_cards = floor( [(mainboard cards) + (sideboard cards) + (margin)] / 2 )
+        """
+        margin = 3  # safety margin to give
+        n_cards_main = len(self.cardmainboard_set.all())
+        n_cards_side = len(self.cardsideboard_set.all())
+        return math.floor( (n_cards_main + n_cards_side + margin) / 2 )
 
     def get_colors(self):
         """Get a list of color codes for the deck, according to its color family."""
