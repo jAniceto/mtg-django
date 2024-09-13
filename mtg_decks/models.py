@@ -490,7 +490,7 @@ class CardMainboard(models.Model):
         return f'{self.mainboard.name} - {self.quantity} {self.card.name}'
 
     class Meta:
-        ordering = ['card__cmc']
+        ordering = ['card__cmc', '-card__mana_cost']
 
 
 class CardSideboard(models.Model):
@@ -506,4 +506,4 @@ class CardSideboard(models.Model):
         return f'{self.sideboard.name} - {self.quantity} {self.card.name}'
 
     class Meta:
-        ordering = ['card__cmc']
+        ordering = ['card__cmc', '-card__mana_cost']
