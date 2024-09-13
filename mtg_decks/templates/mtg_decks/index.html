@@ -36,8 +36,8 @@
         </div>
 
         <!-- Deck list -->
-        {% if decklist_view == 'categorized_type' %}
-            {% include 'mtg_decks/partials/decklist_categorized.html' %}
+        {% if decklist_view == 'by_type' %}
+            {% include 'mtg_decks/partials/decklist_by_type.html' %}
         {% else %}
             {% include 'mtg_decks/partials/decklist.html' %}
         {% endif %}

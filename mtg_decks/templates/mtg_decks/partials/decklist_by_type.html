@@ -1,5 +1,5 @@
 <div class="row">
-    <!-- Decklist (part 1)-->
+    <!-- Decklist (first column)-->
     <div class="col-md-4">
         <table style="width:100%">
             {% for type, mainboard_items in deck.get_categorized_mainboard.items %}
@@ -7,9 +7,10 @@
                     <tr>
                         <td colspan="3">
                             <i class="ms ms-{{ type }}"></i>
-                            <span class="fw-semibold">{{ type|title }}</span>
+                            <span class="fw-semibold">{{ type|title }}</span> {{deck.get_categorized_mainboard_split_type}}
                         </td>
                     </tr>
+
                     {% for mainboard_item in mainboard_items %}
                         <tr>
                             <td>{{ mainboard_item.quantity }}</td>
@@ -25,35 +26,47 @@
                             </td>
                             <td class="text-end">{{ mainboard_item.card.get_mana_cost_html|safe }}</td>
                         </tr>
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
-        </table>
-    </div>
 
-    <!-- Decklist (part 2)-->
-    <div class="col-md-4">
-        <h5>Sideboard</h5>
-        <table style="width:100%">
-            {% for sideboard_item in deck.cardsideboard_set.all %}
-                <tr>
-                    <td>{{ sideboard_item.quantity }}</td>
-                    <td>
-                        <div class="position-relative">
-                            <a href="#" class="link-body-emphasis text-decoration-none hover-link">
-                                {{ sideboard_item.card.name }}
-                            </a>
-                            <div class="hover-image">
-                                <!-- Card image -->
-                                <img src="{{ sideboard_item.card.img_url }}" alt="{{ sideboard_item.card.name }} image">
-                            </div>
-                        </div>
-                    </td>
-                    <td class="text-end">{{ sideboard_item.card.get_mana_cost_html|safe }}</td>
-                </tr>
-            {% endfor %}
+                    {% endfor %}
+                
+                {% endif %}
+
+    <!-- Break first column and continue in the second column -->
+    {% if type == deck.get_categorized_mainboard_split_type %}
         </table>
     </div>
+    <div class="col-md-4">
+        <table style="width:100%">
+            {% endif %}
+                <!-- forloop continues placing stuff here -->
+            {% endfor %}
+        </table>
+
+        <!-- Sideboard (always in a new table in the second column) -->
+        {% if deck.cardsideboard_set.all %}
+            <h5 class="mt-2">Sideboard</h5>
+            <table style="width:100%">
+                {% for sideboard_item in deck.cardsideboard_set.all %}
+                    <tr>
+                        <td>{{ sideboard_item.quantity }}</td>
+                        <td>
+                            <div class="position-relative">
+                                <a href="#" class="link-body-emphasis text-decoration-none hover-link">
+                                    {{ sideboard_item.card.name }}
+                                </a>
+                                <div class="hover-image">
+                                    <!-- Card image -->
+                                    <img src="{{ sideboard_item.card.img_url }}" alt="{{ sideboard_item.card.name }} image">
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-end">{{ sideboard_item.card.get_mana_cost_html|safe }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+            
 
     <!-- Analysis-->
     <div class="col-md-4">

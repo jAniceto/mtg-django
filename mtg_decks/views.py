@@ -7,7 +7,7 @@ def index(request):
     decks = Deck.objects.all()
 
     context = {
-        'decklist_view': '',  # Options: '' or 'categorized_type'
+        'decklist_view': 'by_type',  # Options: '' or 'by_type'
         'decks': decks,
     }
     return render(request, 'mtg_decks/index.html', context)

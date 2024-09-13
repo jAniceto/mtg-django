@@ -427,7 +427,9 @@ class Deck(models.Model):
             ('other', []),
         ])
         for cardmb in mainboard:
-            if 'Creature' in cardmb.card.type_line:
+            if 'Land' in cardmb.card.type_line:
+                categorized_mainboard['land'].append(cardmb)
+            elif 'Creature' in cardmb.card.type_line:
                 categorized_mainboard['creature'].append(cardmb)
             elif 'Instant' in cardmb.card.type_line:
                 categorized_mainboard['instant'].append(cardmb)
@@ -437,11 +439,25 @@ class Deck(models.Model):
                 categorized_mainboard['artifact'].append(cardmb)
             elif 'Enchantment' in cardmb.card.type_line:
                 categorized_mainboard['enchantment'].append(cardmb)
-            elif 'Land' in cardmb.card.type_line:
-                categorized_mainboard['land'].append(cardmb)
             else:
                 categorized_mainboard['other'].append(cardmb)
         return categorized_mainboard
+    
+    def get_categorized_mainboard_split_type(self):
+        """For the OrderedDict returned by Deck.get_categorized_mainboard() it finds a the point where we can 
+        split the type groups into 2 and have roughly the same number of card rows in each division. 
+        Used to split decklist into two columns in the deck display frontend.
+        """
+        categorized_mainboard = self.get_categorized_mainboard()
+        total_items = sum(len(v) for v in categorized_mainboard.values())
+        half_items = (total_items + 6) / 2  # 6 is a typical number of unique sideboard cards
+
+        running_total = 0
+
+        for key, value in categorized_mainboard.items():
+            running_total += len(value)
+            if running_total >= half_items:
+                return key
     
     def max_cards_col(self):
         """Estimates how many unique cards should appear in each of the two decklist columns
