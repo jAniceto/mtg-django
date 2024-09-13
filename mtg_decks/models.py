@@ -492,6 +492,18 @@ class Deck(models.Model):
         """Create the CMC bar chart for a deck."""
         fig = plot_deck_cmc_curve(self)
         return fig.to_html(full_html=True, config={'staticPlot': True, 'displayModeBar': False})
+    
+    def to_string(self):
+        """Convert the decklist in a string."""
+        mainboard = self.cardmainboard_set.all()
+        sideboard = self.cardsideboard_set.all()
+        deck_str = ''
+        for cardmb in mainboard:
+            deck_str += f'{cardmb.quantity} {cardmb.card.name}\n'
+        deck_str += '\n'
+        for cardsb in sideboard:
+            deck_str += f'{cardsb.quantity} {cardsb.card.name}\n'
+        return deck_str
 
 
 class CardMainboard(models.Model):
