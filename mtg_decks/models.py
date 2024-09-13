@@ -449,8 +449,9 @@ class Deck(models.Model):
         Used to split decklist into two columns in the deck display frontend.
         """
         categorized_mainboard = self.get_categorized_mainboard()
-        total_items = sum(len(v) for v in categorized_mainboard.values())
-        half_items = (total_items + 6) / 2  # 6 is a typical number of unique sideboard cards
+        sideboard = self.cardsideboard_set.all()
+        total_items = sum(len(v) for v in categorized_mainboard.values()) + len(sideboard)
+        half_items = (total_items - 2) / 2  # -2 gives a margin to account for group titles
 
         running_total = 0
 
