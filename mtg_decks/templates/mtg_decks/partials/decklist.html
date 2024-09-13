@@ -55,14 +55,14 @@
     <!-- Analysis-->
     <div class="col-md-4">
         <!-- CMC plot -->
-        <div>
+        <div class="d-none d-md-block">
             {{ deck.cmc_chart|safe }}
         </div>
 
         <!-- Info and actions -->
-        <div class="d-grid gap-2 mt-4">
-            <a class="btn btn-outline-secondary" href="#" role="button">Download .txt</a>
-            <a class="btn btn-outline-secondary" href="#" role="button">Copy to clipboard</a>
+        <div class="d-grid gap-2 mt-4 d-md-flex justify-content-md-center">
+            <a class="btn btn-outline-secondary w-100" href="#" role="button">Download .txt</a>
+            <a class="btn btn-outline-secondary w-100" href="#" role="button">Copy to clipboard</a>
         </div>
     </div>
     
