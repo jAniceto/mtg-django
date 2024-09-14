@@ -1,16 +1,27 @@
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
 from django.http import HttpResponse
+from django.conf import settings
 from mtg_decks.models import Deck
 
 
 def index(request):
-    """Homepage. List decks."""
+    """Homepage. List all decks using infinite scroll with HTMX."""
+    page_number = request.GET.get('page', 1)  # defaults to 1 on first load
+
     decks = Deck.objects.all()
+
+    paginator = Paginator(decks, settings.DECKS_PER_PAGE)
+    decks_page = paginator.get_page(page_number)
 
     context = {
         'decklist_view': 'by_type',  # Options: '' or 'by_type'
-        'decks': decks,
+        'decks': decks_page,
     }
+    if request.htmx:
+        # Render partial (new page of decks)
+        return render(request, 'mtg_decks/partials/decks.html', context)
+    # Otherwise, render the full page on the first load
     return render(request, 'mtg_decks/index.html', context)
 
 

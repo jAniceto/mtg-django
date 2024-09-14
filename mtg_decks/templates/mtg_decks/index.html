@@ -4,52 +4,15 @@
 {% block content %}
 <div class="container">
 
-    {% for deck in decks %}
+    <!-- Partial HTML with the forloop of decks -->
+    {% include 'mtg_decks/partials/decks.html' %}
 
-    <div class="mt-4">
-
-        <!-- Header -->
-        <div class="row">
-            <div class="col-md-8">
-                <h1>
-                    {{ deck.name }}
-
-                    {% if deck.get_days_since_created < 7 %} <!-- 7 days (1 week) -->
-                        <span class="badge text-bg-success align-middle fs-5">New</span>
-                    {% elif deck.get_days_since_updated < 7 %}
-                        <span class="badge text-bg-info">Updated</span>
-                    {% endif %}
-                </h1>
-            </div>
-            <div class="col-md-4 d-none d-lg-block">
-                <h1 class="text-end">
-                    {% for color in deck.get_colors %}
-                    <i class="ms ms-cost ms-{{ color }}"></i>
-                    {% endfor %}
-                </h1>
-            </div>
+    <!-- Loading spinner for infinite scroll -->
+    <div id="spinner" class="htmx-indicator d-flex justify-content-center mt-4">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
-        <div class="row">
-            <div class="col">
-
-            </div>
-        </div>
-
-        <!-- Deck list -->
-        {% if decklist_view == 'by_type' %}
-            {% include 'mtg_decks/partials/decklist_by_type.html' %}
-        {% else %}
-            {% include 'mtg_decks/partials/decklist.html' %}
-        {% endif %}
-
     </div>
-
-
-    <div class="my-5">
-        <hr/>
-    </div>
-
-    {% endfor %}
 
     <!-- Hidden field with decklist text -->
     <div id="decklist-text" class="d-none"></div>

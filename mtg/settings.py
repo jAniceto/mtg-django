@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_forms',  # django-crispy-forms
     'crispy_bootstrap5',  # django-crispy-forms (Bootstrap 5)
     'widget_tweaks',  # Django Widget Tweaks
+    'django_htmx',
     'django_filters',
     # Project apps
     'mtg_decks.apps.MtgDecksConfig',  # Pauper Deck Library app
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_htmx.middleware.HtmxMiddleware'  # django_htmx
 ]
 
 ROOT_URLCONF = 'mtg.urls'
@@ -149,3 +151,7 @@ MESSAGE_TAGS = {
 # Django Crispy Forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+
+# Options
+DECKS_PER_PAGE = 4
