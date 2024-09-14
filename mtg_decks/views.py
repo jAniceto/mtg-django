@@ -2,14 +2,18 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.conf import settings
-from mtg_decks.models import Deck
+from django.db.models import Prefetch
+from mtg_decks.models import Deck, CardMainboard, CardSideboard
 
 
 def index(request):
     """Homepage. List all decks using infinite scroll with HTMX."""
     page_number = request.GET.get('page', 1)  # defaults to 1 on first load
 
-    decks = Deck.objects.all()
+    decks = Deck.objects.prefetch_related(
+        Prefetch('cardmainboard_set', queryset=CardMainboard.objects.select_related('card')),
+        Prefetch('cardsideboard_set', queryset=CardSideboard.objects.select_related('card'))
+    ).all()
 
     paginator = Paginator(decks, settings.DECKS_PER_PAGE)
     decks_page = paginator.get_page(page_number)

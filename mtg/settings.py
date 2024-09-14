@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # External Django packages
+    'debug_toolbar',
     'crispy_forms',  # django-crispy-forms
     'crispy_bootstrap5',  # django-crispy-forms (Bootstrap 5)
     'widget_tweaks',  # Django Widget Tweaks
@@ -55,7 +56,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_htmx.middleware.HtmxMiddleware'  # django_htmx
+    'django_htmx.middleware.HtmxMiddleware',  # django_htmx
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'mtg.urls'
@@ -151,6 +153,11 @@ MESSAGE_TAGS = {
 # Django Crispy Forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
 
 
 # Options
