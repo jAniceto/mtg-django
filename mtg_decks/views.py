@@ -46,3 +46,12 @@ def copy_decklist(request, deck_pk):
     deck = get_object_or_404(Deck, pk=deck_pk)
     text_decklist = deck.to_string()
     return HttpResponse(text_decklist)
+
+
+def deck_index(request):
+    """Table containing all decks."""
+    decks = Deck.objects.all()
+    context = {
+        'decks': decks,
+    }
+    return render(request, 'mtg_decks/deck-index.html', context)

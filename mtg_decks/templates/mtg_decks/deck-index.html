@@ -1,0 +1,42 @@
+{% extends "mtg_decks/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="mt-5">
+        <table id="deck-index" class="table table-hover table-sm table-responsive">
+            <thead>
+                <tr>
+                    <th scope="col">Deck name</th>
+                    <th scope="col">Color</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Tags</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for deck in decks %}
+                    <tr>
+                        <td>
+                            <a href="#">{{ deck.name }}</a>
+                        </td>
+                        <td>
+                            {% for color in deck.get_colors %}
+                                <i class="ms ms-cost ms-{{ color }}"></i>
+                            {% endfor %}
+                        </td>
+                        <td class="text-end">
+                            -
+                        </td>
+                        <td>
+                            -
+                        </td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

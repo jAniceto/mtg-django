@@ -1,27 +1,33 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-  <div class="container">
-    <a class="navbar-brand" href="{% url 'index' %}">The Pauper Deck Library</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
     
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-
-        <a class="nav-link" href="#">About</a>
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'index' %}"> The Pauper Deck Library</a>
+        &nbsp; <span class="fs-6 fw-lighter text-secondary text-opacity-50">by Synergix</span>
         
-        {% if user.is_authenticated %}
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="">Logout</a>
-        </li> -->
-        {% else %}
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="">Login</a>
-        </li> -->
-        {% endif %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-      </ul>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
 
+                <a class="nav-link" href="#">About</a>
+                <a class="nav-link" href="{% url 'deck_index' %}">Index</a>
+
+                {% if user.is_authenticated %}
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="">Logout</a>
+                </li> -->
+                {% else %}
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="">Login</a>
+                </li> -->
+                {% endif %}
+
+            </ul>
+
+        </div>
+    
     </div>
-  </div>
 </nav>
