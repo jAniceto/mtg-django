@@ -1,53 +1,60 @@
 {% for deck in decks %}
 
-    <div class="mt-4">
 
-        <!-- Header -->
-        <div class="row">
-            <div class="col-md-8">
-                <h1>
-                    {{ deck.name }}
+    <div class="card mt-5">
 
-                    {% if deck.get_days_since_created < 7 %} <!-- 7 days (1 week) -->
-                        <span class="badge text-bg-success align-middle fs-5">New</span>
-                    {% elif deck.get_days_since_updated < 7 %}
-                        <span class="badge text-bg-info">Updated</span>
-                    {% endif %}
-                </h1>
-            </div>
-            <div class="col-md-4 d-none d-lg-block">
-                <h1 class="text-end">
-                    {% for color in deck.get_colors %}
-                    <i class="ms ms-cost ms-{{ color }}"></i>
-                    {% endfor %}
-                </h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
+        <!-- Card header - deck name -->
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>
+                        {{ deck.name }}
 
+                        {% if deck.get_days_since_created < 7 %} <!-- 7 days (1 week) -->
+                            <span class="badge text-bg-success align-middle fs-5">New</span>
+                        {% elif deck.get_days_since_updated < 7 %}
+                            <span class="badge text-bg-info">Updated</span>
+                        {% endif %}
+                    </h1>
+                </div>
+                <div class="col-md-4 d-none d-lg-block">
+                    <h2 class="text-end">
+                        {% for color in deck.get_colors %}
+                        <i class="ms ms-cost ms-{{ color }}"></i>
+                        {% endfor %}
+                    </h2>
+                </div>
             </div>
         </div>
 
-        <!-- Deck list (there are several options on how to display the decklist) -->
-        {% if decklist_view == 'by_type' %}
-            {% include 'mtg_decks/partials/decklist_by_type.html' %}
-        {% else %}
-            {% include 'mtg_decks/partials/decklist.html' %}
-        {% endif %}
+        <!-- Card body - decklist (there are several options on how to display the decklist) -->
+        <div class="card-body">
+
+            {% if decklist_view == 'by_type' %}
+                {% include 'mtg_decks/partials/decklist_by_type.html' %}
+            {% else %}
+                {% include 'mtg_decks/partials/decklist.html' %}
+            {% endif %}
+
+        </div>
+        
+        <!-- Card footer - tags -->
+        <div class="card-footer text-body-secondary">
+            tags here
+        </div>
 
     </div>
 
-
+    <!-- Handle infinite scroll -->
     {% if decks.has_next and forloop.last %}
-    <div hx-get="{% url 'index' %}?page={{ decks.next_page_number }}" 
-        hx-trigger="revealed" 
-        hx-swap="afterend"
-        hx-indicator="#spinner">
-    </div>
+        <div hx-get="{% url 'index' %}?page={{ decks.next_page_number }}" 
+            hx-trigger="revealed" 
+            hx-swap="afterend"
+            hx-indicator="#spinner">
+        </div>
 
     {% else %}
-    <div class="mt-4"></div>
+        <div class="mt-5"></div>
     {% endif %}
 
 
