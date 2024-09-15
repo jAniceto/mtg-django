@@ -19,7 +19,7 @@ def index(request):
     decks_page = paginator.get_page(page_number)
 
     context = {
-        'decklist_view': 'by_type',  # Options: '' or 'by_type'
+        'decklist_view': settings.DECKLIST_DISPLAY,
         'decks': decks_page,
     }
     if request.htmx:

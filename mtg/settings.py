@@ -161,4 +161,5 @@ INTERNAL_IPS = [
 
 
 # Options
-DECKS_PER_PAGE = 4
+DECKS_PER_PAGE = 8
+DECKLIST_DISPLAY = 'by_type'  # Options: '' or 'by_type'
