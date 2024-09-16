@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 
 import json
 
-from mtg_utils.db import get_or_create_card
+from mtg_decks.models import get_or_create_card
 
 
 # Example cards
@@ -12,7 +12,7 @@ EXAMPLE_CARDS = [
     'Oh Snap',
     'Preordein',
     'Ponder',
-    'Force of Will',
+    'Solitude',
 ]
 
 

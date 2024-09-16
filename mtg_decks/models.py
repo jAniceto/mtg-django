@@ -10,6 +10,7 @@ import requests
 import json
 
 from mtg_utils.mtg import color_families, mana_cost_html
+from mtg_utils import scryfall
 from mtg_decks.charts import plot_deck_cmc_curve
 
 
@@ -373,19 +374,12 @@ class Deck(models.Model):
             card_name = card[1].strip()
 
             # Get Card or create a new Card object
-            card, created = Card.objects.get_or_create(name=card_name)
+            card, result = get_or_create_card(card_name)
 
-            if created:
-                # Get card info from Scryfall
-                scryfall_card = card.get_scryfall()
-
-                # Add card info to DB
-                if scryfall_card:
-                    card.add_info(scryfall_card)
-                else:
-                    errors.append(card_name)
-                    print('Error with', card_name)
-                    continue
+            if result is None:
+                errors.append(card_name)
+                print(f'Error with {card_name} when adding a new deck.')
+                continue
 
             # Add card object to mainboard
             CardMainboard.objects.create(mainboard=self, card=card, quantity=card_qty)
@@ -396,19 +390,13 @@ class Deck(models.Model):
             card_name = card[1].strip()
 
             # Get Card or create a new Card object
-            card, created = Card.objects.get_or_create(name=card_name)
+            card, result = get_or_create_card(card_name)
 
-            if created:
-                # Get card info from Scryfall
-                scryfall_card = card.get_scryfall()
+            if result is None:
+                errors.append(card_name)
+                print(f'Error with {card_name} when adding a new deck.')
+                continue
 
-                # Add card info to DB
-                if scryfall_card:
-                    card.add_info(scryfall_card)
-                else:
-                    errors.append(card_name)
-                    print('Error with', card_name)
-                    continue
 
             # Add card object to sideboard
             CardSideboard.objects.create(sideboard=self, card=card, quantity=card_qty)
@@ -536,3 +524,25 @@ class CardSideboard(models.Model):
 
     class Meta:
         ordering = ['card__cmc', '-card__mana_cost']
+
+
+def get_or_create_card(card_name):
+    """Get a card object or create a new one by trying to find data in Scryfall."""
+    try:
+        # Try to find the card on the database
+        card = Card.objects.get(name=card_name)
+        return card, 'exists'  # if found, skip to next card
+
+    except Card.DoesNotExist:
+        # Try to find the card on Scryfall
+        scryfall_card = scryfall.get_card_by_name(card_name)
+
+        if scryfall_card is None:
+            print(f'{card_name} was not found.')
+            return None, None
+        
+        # If card was found in Scryfall, add to database
+        card = Card(name=card_name)
+        card.save()
+        card.add_info(scryfall_card)
+        return card, 'created'
