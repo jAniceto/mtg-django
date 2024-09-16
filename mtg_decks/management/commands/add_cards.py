@@ -2,18 +2,17 @@ from django.core.management.base import BaseCommand
 
 import json
 
-from mtg_decks.models import Card
-from mtg_utils import scryfall
+from mtg_utils.db import get_or_create_card
 
 
 # Example cards
 EXAMPLE_CARDS = [
     'Ancient Den',
     'Rancor',
-    'Oh Crap',
+    'Oh Snap',
     'Preordein',
     'Ponder',
-    'Force of Negation',
+    'Force of Will',
 ]
 
 
@@ -39,25 +38,15 @@ class Command(BaseCommand):
         n_created = 0 
         n_fails = 0
         for card_name in cards:
-            try:
-                # Try to find the card on the database
-                card = Card.objects.get(name=card_name)
-                continue  # if found, skip to next card
+            # Check if card exists, otherwise create a new card object
+            _, result = get_or_create_card(card_name)
             
-            except Card.DoesNotExist:
-                # Try to find the card on Scryfall
-                scryfall_card = scryfall.get_card_by_name(card_name)
-
-                if scryfall_card is None:
-                    self.stdout.write(f'{card_name} was not found.')
-                    n_fails += 1
-                    continue  # skip to next card
-                
-                # If card was found in Scryfall, add to database
-                card = Card(name=card_name)
-                card.save()
+            if result == 'exists':
+                pass
+            elif result == 'created':
                 n_created += 1
-                card.add_info(scryfall_card)
+            else:
+                n_fails += 1
 
         # Summarize
         self.stdout.write('--------------------')
