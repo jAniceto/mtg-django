@@ -330,77 +330,6 @@ class Deck(models.Model):
             # Newly created object, so set slug
             self.slug = slugify(self.name)
         super(Deck, self).save(*args, **kwargs)
-
-    def add_info(self, deck_dict):
-        """Add deck info to deck object. Deck info is a dict of the following format:
-        deck_dict = {
-            "mainboard": [
-                [4, "All That Glitters"],
-                [4, "Ancient Den"],
-                ...
-            ],
-            "sideboard": [
-                [1, "Revoke Existence"],
-                [3, "Dust to Dust"],
-                ...
-            ],
-            "name": "Affinity Azorius",
-            "color": "azorius",
-            "tags": None,
-            "author": None,
-            "source": None,
-            "created_at": "2024/04/26"
-        }
-        """
-        # Add or update info
-        # self.format_name = 'Pauper'
-        try:
-            self.family = deck_dict['color'].capitalize()
-        except AttributeError:
-            pass
-        # self.description = None
-        self.source = deck_dict['author']
-        self.source_url = deck_dict['source']
-        self.save()
-
-        # Clear decklists if needed
-        self.mainboard.clear()
-        self.sideboard.clear()
-
-        # Add mainboard
-        errors = []  # list of card names that caused and error
-        for card in deck_dict['mainboard']:
-            card_qty = card[0]
-            card_name = card[1].strip()
-
-            # Get Card or create a new Card object
-            card, result = get_or_create_card(card_name)
-
-            if result is None:
-                errors.append(card_name)
-                print(f'Error with {card_name} when adding a new deck.')
-                continue
-
-            # Add card object to mainboard
-            CardMainboard.objects.create(mainboard=self, card=card, quantity=card_qty)
-
-        # Add sideboard
-        for card in deck_dict['sideboard']:
-            card_qty = card[0]
-            card_name = card[1].strip()
-
-            # Get Card or create a new Card object
-            card, result = get_or_create_card(card_name)
-
-            if result is None:
-                errors.append(card_name)
-                print(f'Error with {card_name} when adding a new deck.')
-                continue
-
-
-            # Add card object to sideboard
-            CardSideboard.objects.create(sideboard=self, card=card, quantity=card_qty)
-        return self, errors
     
     def get_categorized_mainboard(self):
         """Returns a dict of the mainboard card categorized by card type (creature, artifact, etc)."""
@@ -546,3 +475,78 @@ def get_or_create_card(card_name):
         card.save()
         card.add_info(scryfall_card)
         return card, 'created'
+
+
+def update_or_create_deck(deck_dict):
+    """Add deck info to deck object. Deck info is a dict of the following format:
+    deck_dict = {
+        "mainboard": [
+            [4, "All That Glitters"],
+            [4, "Ancient Den"],
+            ...
+        ],
+        "sideboard": [
+            [1, "Revoke Existence"],
+            [3, "Dust to Dust"],
+            ...
+        ],
+        "name": "Affinity Azorius",
+        "color": "azorius",
+        "tags": None,
+        "author": None,
+        "source": None,
+        "created_at": "2024/04/26"
+    }
+    """
+    # Get deck or create a new deck
+    deck, created = Deck.objects.get_or_create(name=deck_dict['name'])
+    
+    # Add or update info
+    # self.format_name = 'Pauper'
+    try:
+        deck.family = deck_dict['color'].capitalize()
+    except AttributeError:
+        pass
+    # deck.description = None
+    deck.source = deck_dict['author']
+    deck.source_url = deck_dict['source']
+    deck.save()
+
+    # Clear decklists if needed
+    deck.mainboard.clear()
+    deck.sideboard.clear()
+
+    # Add mainboard
+    errors = []  # list of card names that caused and error
+    for card in deck_dict['mainboard']:
+        card_qty = card[0]
+        card_name = card[1].strip()
+
+        # Get Card or create a new Card object
+        card, result = get_or_create_card(card_name)
+
+        if result is None:
+            errors.append(card_name)
+            print(f'Error with {card_name} when adding a new deck.')
+            continue
+
+        # Add card object to mainboard
+        CardMainboard.objects.create(mainboard=deck, card=card, quantity=card_qty)
+
+    # Add sideboard
+    for card in deck_dict['sideboard']:
+        card_qty = card[0]
+        card_name = card[1].strip()
+
+        # Get Card or create a new Card object
+        card, result = get_or_create_card(card_name)
+
+        if result is None:
+            errors.append(card_name)
+            print(f'Error with {card_name} when adding a new deck.')
+            continue
+
+        # Add card object to sideboard
+        CardSideboard.objects.create(sideboard=deck, card=card, quantity=card_qty)
+    return deck, created, errors
+    

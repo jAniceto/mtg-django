@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 
 import json
 
-from mtg_decks.models import Deck
+from mtg_decks.models import Deck, update_or_create_deck
 
 
 EXAMPLE_DECKS = [
@@ -95,11 +95,15 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('-f', '--filepath', type=str, help='Path to decks JSON file.')
         parser.add_argument('-m', '--max', type=int, help='Maximum number of decks to load.')
+        parser.add_argument('--del', action='store_true', help='Delete all decks not in the in the input data.')
 
     def handle(self, *args, **options):
         json_file = options['filepath']
         max_decks = options['max']
+        delete_other_decks = options['del']
 
+        # 1) Choose source of data (JSON file or dict)
+        self.stdout.write('Loading data...')
         if json_file:
             # Load decks file
             with open(json_file, 'r') as f:
@@ -111,17 +115,30 @@ class Command(BaseCommand):
         else:
             decks = EXAMPLE_DECKS
 
-        # Add decks
-        for deck_dict in decks:
-            # Get or create Deck
-            deck, created = Deck.objects.get_or_create(name=deck_dict['name'])
+        # 2) If --del was passed, delete all decks that are not in the provided data
+        if delete_other_decks:
+            self.stdout.write('Searching decks for deletion...')
+            
+            deck_names_in_data = [d['name'] for d in decks]  # list of deck names in the data
+            deck_objs = Deck.objects.all()
+            
+            for deck_obj in deck_objs:
+                if deck_obj.name not in deck_names_in_data:
+                    self.stdout.write(f'Deleted {deck_obj.name} deck.')
+                    deck_obj.delete()
 
-            # Add or update info
-            deck.add_info(deck_dict)
+        # 3) Add decks in the provided data to DB
+        self.stdout.write('Adding or updating decks...')
+        for deck_dict in decks:
+            # Add or update deck
+            deck, created, errors = update_or_create_deck(deck_dict)
 
             # Print result
             if created:
-                action_str = 'CREATED'
+                self.stdout.write(f'Created {deck.name}.')
             else:
-                action_str = 'UPDATED'
-            self.stdout.write(f'{action_str} -- {deck.name}')
+                self.stdout.write(f'Updated {deck.name}.')
+            
+            # Print errors
+            for card_name in errors:
+                self.stdout.write(f' - Error adding {card_name} to {deck.name}.')
