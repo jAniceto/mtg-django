@@ -160,6 +160,17 @@ INTERNAL_IPS = [
 ]
 
 
-# Options
+# WEBSITE DISPLAY OPTIONS
+
+# Number of decks per page on homepage.
 DECKS_PER_PAGE = 8
-DECKLIST_DISPLAY = 'by_type'  # Options: '' or 'by_type'
+
+# How to present the decklist. Options are '' or 'by_type'
+DECKLIST_DISPLAY = 'by_type'
+
+# Margin to apply when spliting decklist over 2 columns. Applies when DECKLIST_DISPLAY = 'by_type'.
+# Higher value places more cards in the second column. Recommended between -2 and 2.
+DECKLIST_COL_SPLIT_MARGIN = -2
+
+# Maximum days for a deck to be considered new (new badge)
+NEW_BADGE_LIMIT_DAYS = 1  

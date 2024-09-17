@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
 from django.utils import timezone
+from django.conf import settings
 
 import requests
 import json
@@ -368,7 +369,7 @@ class Deck(models.Model):
         categorized_mainboard = self.get_categorized_mainboard()
         sideboard = self.cardsideboard_set.all()
         total_items = sum(len(v) for v in categorized_mainboard.values()) + len(sideboard)
-        half_items = (total_items - 2) / 2  # -2 gives a margin to account for group titles
+        half_items = (total_items - settings.DECKLIST_COL_SPLIT_MARGIN) / 2  # 2 gives a margin to account for group titles
 
         running_total = 0
 

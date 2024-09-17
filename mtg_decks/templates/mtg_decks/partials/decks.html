@@ -10,9 +10,9 @@
                     <h1>
                         {{ deck.name }}
 
-                        {% if deck.get_days_since_created < 7 %} <!-- 7 days (1 week) -->
+                        {% if deck.get_days_since_created < new_badge_limit_days %}
                             <span class="badge text-bg-success align-middle fs-5">New</span>
-                        {% elif deck.get_days_since_updated < 7 %}
+                        {% elif deck.get_days_since_updated < new_badge_limit_days %}
                             <span class="badge text-bg-info">Updated</span>
                         {% endif %}
                     </h1>

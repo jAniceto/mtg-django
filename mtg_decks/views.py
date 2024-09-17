@@ -20,6 +20,7 @@ def index(request):
 
     context = {
         'decklist_view': settings.DECKLIST_DISPLAY,
+        'new_badge_limit_days': settings.NEW_BADGE_LIMIT_DAYS,
         'decks': decks_page,
     }
     if request.htmx:
