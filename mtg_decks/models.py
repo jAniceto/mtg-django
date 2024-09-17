@@ -456,6 +456,18 @@ class CardSideboard(models.Model):
         ordering = ['card__cmc', '-card__mana_cost']
 
 
+class Tag(models.Model):
+    """Tags to describe the decks."""
+    name = models.CharField(max_length=30)
+    decks = models.ManyToManyField(Deck, related_name='tags', blank=True)
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        ordering = ['name']
+
+
 def get_or_create_card(card_name):
     """Get a card object or create a new one by trying to find data in Scryfall."""
     try:
