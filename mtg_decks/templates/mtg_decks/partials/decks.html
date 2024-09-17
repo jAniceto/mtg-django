@@ -40,7 +40,10 @@
         
         <!-- Card footer - tags -->
         <div class="card-footer text-body-secondary">
-            tags here
+            Tags: 
+            {% for tag in deck.tags.all %}
+                <a href="#" class="text-reset"><kbd>{{ tag }}</kbd></a>
+            {% endfor %}
         </div>
 
     </div>
