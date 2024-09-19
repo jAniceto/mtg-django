@@ -4,8 +4,63 @@
 {% block content %}
 <div class="container">
 
+    <!-- Deck filtering -->
+    <div id="filter-container" class="card mt-4">
+
+        <!-- Card header -->
+        <div class="card-header text-center">
+            Filter decks
+        </div>
+
+        <!-- Card body -->
+        <div class="card-body">
+
+            <form id="deck-filter-form" 
+                hx-get="{% url 'deck_list_filtering' %}" 
+                hx-target="#decks-container" 
+                hx-trigger="submit" 
+                hx-indicator="#filter-spinner" 
+                hx-on::config-request="document.getElementById('filter-spinner').classList.remove('d-none');" 
+                hx-on::after-request="document.getElementById('filter-spinner').classList.add('d-none');">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="deckNameInput" class="form-label">By name</label>
+                        <input type="text" class="form-control" id="deckNameInput" name="deck-name">
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label for="cardInMainInput" class="form-label">By a card in mainboard</label>
+                        <input type="text" class="form-control" id="cardInMainInput" name="card-name">
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-10">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <span id="filter-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            Filter!
+                        </button>
+                    </div>
+
+                    <div class="col-md-2">
+                        <a href="{% url 'index' %}" type="button" class="btn btn-outline-primary w-100">Reset</a>
+                    </div>
+                </div>
+    
+            </form>
+
+        </div>
+
+    </div>
+
+
     <!-- Partial HTML with the forloop of decks -->
-    {% include 'mtg_decks/partials/decks.html' %}
+    <div id="decks-container">
+        {% include 'mtg_decks/partials/decks.html' %}
+    </div>
 
     <!-- Loading spinner for infinite scroll -->
     <div id="spinner" class="htmx-indicator d-flex justify-content-center mt-4">
