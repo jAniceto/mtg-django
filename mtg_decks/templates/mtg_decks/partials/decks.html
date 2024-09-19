@@ -11,9 +11,9 @@
                         {{ deck.name }}
 
                         {% if deck.get_days_since_created < new_badge_limit_days %}
-                            <span class="badge text-bg-success align-middle fs-5">New</span>
+                            <span class="badge text-bg-success align-middle fs-6">New</span>
                         {% elif deck.get_days_since_updated < new_badge_limit_days %}
-                            <span class="badge text-bg-info">Updated</span>
+                            <span class="badge text-bg-info align-middle fs-6">Updated</span>
                         {% endif %}
                     </h1>
                 </div>
