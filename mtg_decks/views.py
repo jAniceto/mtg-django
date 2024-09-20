@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.db.models import Prefetch
 from mtg_decks.models import Deck, CardMainboard, CardSideboard
+from mtg_decks.forms import DeckFilterForm
 
 
 def index(request):
@@ -22,6 +23,7 @@ def index(request):
         'decklist_view': settings.DECKLIST_DISPLAY,
         'new_badge_limit_days': settings.NEW_BADGE_LIMIT_DAYS,
         'decks': decks_page,
+        'form': DeckFilterForm()
     }
     if request.htmx:
         # Render partial (new page of decks)
@@ -68,14 +70,22 @@ def deck_list_filtering(request):
     ).all()
 
     # Get form data
-    deck_name = request.GET.get('deck-name', '')
-    card_name = request.GET.get('card-name', '')
+    form = DeckFilterForm(request.POST)
+    if form.is_valid():
+        deck_name = form.cleaned_data['name']
+        deck_family = form.cleaned_data['family']
+        card_name = form.cleaned_data['card']
+        deck_tag = form.cleaned_data['tag']
 
-    # Filter base queryset
-    if deck_name:
-        decks = decks.filter(name__icontains=deck_name)
-    if card_name:
-        decks = decks.filter(mainboard__name__icontains=card_name)
+        # Filter base queryset
+        if deck_name:
+            decks = decks.filter(name__icontains=deck_name)
+        if deck_family:
+            decks = decks.filter(family__iexact=deck_family)
+        if card_name:
+            decks = decks.filter(mainboard__name__icontains=card_name)
+        if deck_tag:
+            decks = decks.filter(tags__name=deck_tag.name)
     
 
     # Pagination

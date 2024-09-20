@@ -1,5 +1,7 @@
 {% extends "mtg_decks/base.html" %}
 {% load static %}
+{% load widget_tweaks %}
+
 
 {% block content %}
 <div class="container">
@@ -25,18 +27,22 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="deckNameInput" class="form-label">By name</label>
-                        <input type="text" class="form-control" id="deckNameInput" name="deck-name">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">By name</label>
+                        {{ form.name|add_class:"form-control" }}
+
+                        <label for="{{ form.family.id_for_label }}" class="form-label mt-3">By guild/shard/clan</label>
+                        {{ form.family|add_class:"form-select" }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ form.card.id_for_label }}" class="form-label">By card in mainboard</label>
+                        {{ form.card|add_class:"form-control" }}
+
+                        <label for="{{ form.tag.id_for_label }}" class="form-label mt-3">By tag</label>
+                        {{ form.tag|add_class:"form-select" }}
                     </div>
                 </div>
 
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <label for="cardInMainInput" class="form-label">By a card in mainboard</label>
-                        <input type="text" class="form-control" id="cardInMainInput" name="card-name">
-                    </div>
-                </div>
-                
                 <div class="row mt-3">
                     <div class="col-md-10">
                         <button type="submit" class="btn btn-primary w-100">

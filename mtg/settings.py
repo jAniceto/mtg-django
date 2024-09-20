@@ -163,7 +163,7 @@ INTERNAL_IPS = [
 # WEBSITE DISPLAY OPTIONS
 
 # Number of decks per page on homepage.
-DECKS_PER_PAGE = 8
+DECKS_PER_PAGE = 4
 
 # How to present the decklist. Options are '' or 'by_type'
 DECKLIST_DISPLAY = 'by_type'
