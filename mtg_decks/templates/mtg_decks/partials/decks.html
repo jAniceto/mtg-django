@@ -4,11 +4,11 @@
     <div class="card mt-5">
 
         <!-- Card header - deck name -->
-        <div class="card-header">
+        <div class="card-header position-relative">
             <div class="row">
                 <div class="col-md-8">
-                    <h1>
-                        {{ deck.name }}
+                    <h1 class="mb-0">
+                        <a href="#" class="text-decoration-none text-reset stretched-link">{{ deck.name }}</a>
 
                         {% if deck.get_days_since_created < new_badge_limit_days %}
                             <span class="badge text-bg-success align-middle fs-6">New</span>
@@ -18,7 +18,7 @@
                     </h1>
                 </div>
                 <div class="col-md-4 d-none d-lg-block">
-                    <h2 class="text-end">
+                    <h2 class="text-end mb-0">
                         {% for color in deck.get_colors %}
                         <i class="ms ms-cost ms-{{ color }}"></i>
                         {% endfor %}
@@ -40,10 +40,13 @@
         
         <!-- Card footer - tags -->
         <div class="card-footer text-body-secondary">
-            Tags: 
-            {% for tag in deck.tags.all %}
-                <a href="#" class="text-reset"><kbd>{{ tag }}</kbd></a>
-            {% endfor %}
+            {% if deck.tags.all %}
+                {% for tag in deck.tags.all %}
+                    <a href="#" class="text-reset"><kbd>{{ tag }}</kbd></a>
+                {% endfor %}
+            {% else %}
+                &nbsp;
+            {% endif %}
         </div>
 
     </div>
