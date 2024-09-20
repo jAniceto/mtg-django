@@ -9,13 +9,32 @@ from mtg_decks.forms import DeckFilterForm
 
 def index(request):
     """Homepage. List all decks using infinite scroll with HTMX."""
-    page_number = request.GET.get('page', 1)  # defaults to 1 on first load
-
+    # Base queryset (all decks)
     decks = Deck.objects.prefetch_related(
         Prefetch('cardmainboard_set', queryset=CardMainboard.objects.select_related('card')),
         Prefetch('cardsideboard_set', queryset=CardSideboard.objects.select_related('card'))
     ).all()
 
+    # Get form data
+    form = DeckFilterForm(request.GET)
+    if form.is_valid():
+        deck_name = form.cleaned_data['name']
+        deck_family = form.cleaned_data['family']
+        card_name = form.cleaned_data['card']
+        deck_tag = form.cleaned_data['tag']
+
+        # Filter base queryset
+        if deck_name:
+            decks = decks.filter(name__icontains=deck_name)
+        if deck_family:
+            decks = decks.filter(family__iexact=deck_family)
+        if card_name:
+            decks = decks.filter(mainboard__name__icontains=card_name)
+        if deck_tag:
+            decks = decks.filter(tags=deck_tag)
+
+    # Pagination
+    page_number = request.GET.get('page', 1)  # defaults to 1 on first load
     paginator = Paginator(decks, settings.DECKS_PER_PAGE)
     decks_page = paginator.get_page(page_number)
 
@@ -58,44 +77,3 @@ def deck_index(request):
         'decks': decks,
     }
     return render(request, 'mtg_decks/deck-index.html', context)
-
-
-# HTMX views
-def deck_list_filtering(request):
-    """HTMX based filtering of homepage decks."""
-    # Base queryset (all decks)
-    decks = Deck.objects.prefetch_related(
-        Prefetch('cardmainboard_set', queryset=CardMainboard.objects.select_related('card')),
-        Prefetch('cardsideboard_set', queryset=CardSideboard.objects.select_related('card'))
-    ).all()
-
-    # Get form data
-    form = DeckFilterForm(request.POST)
-    if form.is_valid():
-        deck_name = form.cleaned_data['name']
-        deck_family = form.cleaned_data['family']
-        card_name = form.cleaned_data['card']
-        deck_tag = form.cleaned_data['tag']
-
-        # Filter base queryset
-        if deck_name:
-            decks = decks.filter(name__icontains=deck_name)
-        if deck_family:
-            decks = decks.filter(family__iexact=deck_family)
-        if card_name:
-            decks = decks.filter(mainboard__name__icontains=card_name)
-        if deck_tag:
-            decks = decks.filter(tags__name=deck_tag.name)
-    
-
-    # Pagination
-    page_number = request.GET.get('page', 1)  # defaults to 1 on first load
-    paginator = Paginator(decks, settings.DECKS_PER_PAGE)
-    decks_page = paginator.get_page(page_number)
-
-    context = {
-        'decklist_view': settings.DECKLIST_DISPLAY,
-        'new_badge_limit_days': settings.NEW_BADGE_LIMIT_DAYS,
-        'decks': decks_page,
-    }
-    return render(request, 'mtg_decks/partials/decks.html', context)
