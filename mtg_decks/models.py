@@ -458,7 +458,7 @@ class CardSideboard(models.Model):
 
 class Tag(models.Model):
     """Tags to describe the decks."""
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
     decks = models.ManyToManyField(Deck, related_name='tags', blank=True)
 
     def __str__(self):
