@@ -18,7 +18,9 @@
                 {% for deck in decks %}
                     <tr>
                         <td>
-                            <a href="#">{{ deck.name }}</a>
+                            <a href="{% url 'deck' deck.pk deck.slug %}" class="text-decoration-none stretched-link">
+                                {{ deck.name }}
+                            </a>
                         </td>
                         <td>
                             {% for color in deck.get_colors %}

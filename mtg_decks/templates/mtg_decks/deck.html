@@ -1,5 +1,10 @@
-{% for deck in decks %}
+{% extends "mtg_decks/base.html" %}
+{% load static %}
 
+
+{% block content %}
+
+<div class="container">
 
     <div class="card mt-5">
 
@@ -51,18 +56,6 @@
 
     </div>
 
-    <!-- Handle infinite scroll -->
-    {% if decks.has_next and forloop.last %}
-        <div hx-get="{% url 'index' %}?page={{ decks.next_page_number }}" 
-            hx-trigger="revealed" 
-            hx-swap="afterend"
-            hx-indicator="#spinner" 
-            hx-include="#deck-filter-form">
-        </div>
+</div>
 
-    {% else %}
-        <div class="mt-5"></div>
-    {% endif %}
-
-
-{% endfor %}
+{% endblock %}

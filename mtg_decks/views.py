@@ -77,3 +77,15 @@ def deck_index(request):
         'decks': decks,
     }
     return render(request, 'mtg_decks/deck-index.html', context)
+
+
+def deck(request, pk, slug):
+    """Deck detail page."""
+    # Check if deck exists, otherwise return 404 error
+    deck = get_object_or_404(Deck, pk=pk)
+    context = {
+        'decklist_view': settings.DECKLIST_DISPLAY,
+        'new_badge_limit_days': settings.NEW_BADGE_LIMIT_DAYS,
+        'deck': deck,
+    }
+    return render(request, 'mtg_decks/deck.html', context)
