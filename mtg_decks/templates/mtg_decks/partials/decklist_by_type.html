@@ -16,11 +16,11 @@
                             <td>{{ mainboard_item.quantity }}</td>
                             <td>
                                 <div class="position-relative">
-                                    <a href="#" class="link-body-emphasis text-decoration-none hover-link">
+                                    <a href="#" class="link-body-emphasis text-decoration-none hover-link" data-image-url="{{ mainboard_item.card.img_url }}">
                                         {{ mainboard_item.card.name }}
                                     </a>
                                     <div class="hover-image">
-                                        <img src="{{ mainboard_item.card.img_url }}" alt="{{ mainboard_item.card.name }} image">
+                                        <!-- Card image is created here when link above is hovered -->
                                     </div>
                                 </div>
                             </td>
@@ -51,12 +51,11 @@
                         <td>{{ sideboard_item.quantity }}</td>
                         <td>
                             <div class="position-relative">
-                                <a href="#" class="link-body-emphasis text-decoration-none hover-link">
+                                <a href="#" class="link-body-emphasis text-decoration-none hover-link" data-image-url="{{ sideboard_item.card.img_url }}">
                                     {{ sideboard_item.card.name }}
                                 </a>
                                 <div class="hover-image">
-                                    <!-- Card image -->
-                                    <img src="{{ sideboard_item.card.img_url }}" alt="{{ sideboard_item.card.name }} image">
+                                    <!-- Card image is created here when link above is hovered -->
                                 </div>
                             </div>
                         </td>
