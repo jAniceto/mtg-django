@@ -4,6 +4,7 @@
 
 
 {% block content %}
+
 <div class="container">
 
     <!-- Deck filtering -->
@@ -36,7 +37,8 @@
 
                     <div class="col-md-6">
                         <label for="{{ form.card.id_for_label }}" class="form-label">By card in mainboard</label>
-                        {{ form.card|add_class:"form-control" }}
+                        {{ form.card|add_class:"form-control"|attr:"list:pauper-card-names"|attr:"autocomplete:off" }}
+                        <datalist id="pauper-card-names"></datalist>
 
                         <label for="{{ form.tag.id_for_label }}" class="form-label mt-3">By tag</label>
                         {{ form.tag|add_class:"form-select" }}
@@ -79,4 +81,67 @@
     <div id="decklist-text" class="d-none"></div>
 
 </div>
+
+{% endblock %}
+
+
+
+{% block javascript %}
+
+<script>
+    // Create a list of pauper legal cards on the card input
+    
+    // Get the <datalist> and <input> elements.
+    const cardSearch = document.getElementById('id_card');
+    const cardList = document.getElementById('pauper-card-names');
+
+    // Function to fetch cards from Scryfall API
+    async function fetchCards() {
+        const query = cardSearch.value.trim();
+
+        // Only send a request if there is input
+        if (query.length === 0) {
+            cardList.innerHTML = '';
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://api.scryfall.com/cards/search?q=${query}+legal:pauper&unique=cards&order=name`);
+
+            if (response.ok) {
+                const data = await response.json();
+
+                // Clear the list before adding new results
+                cardList.innerHTML = '';
+
+                // Populate the list with card names
+                data.data.forEach(card => {
+                    const listItem = document.createElement('option');
+                    {% comment %} listItem.textContent = card.name; {% endcomment %}
+                    listItem.value = card.name;
+                    cardList.appendChild(listItem);
+                });
+
+            }
+        } catch (error) {
+            console.log(`${error.message}`);
+        }
+    }
+
+    // Debounce function: Delays the execution of a function
+    function debounce(func, delay) {
+        let debounceTimeout;
+        return function (...args) {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // Wrap fetchCards with debounce (300ms delay)
+    const debouncedFetchCards = debounce(fetchCards, 300);
+
+    // Add event listener to the input element to trigger the debounced function
+    cardSearch.addEventListener('keyup', debouncedFetchCards);
+</script>
+
 {% endblock %}
