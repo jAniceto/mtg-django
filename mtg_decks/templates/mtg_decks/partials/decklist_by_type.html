@@ -26,8 +26,8 @@
                             </td>
                             <td class="text-end">{{ mainboard_item.card.get_mana_cost_html|safe }}</td>
                             <td class="text-end">
-                                {% if not mainboard_item.is_basic_land %}
-                                    {{ mainboard_item.card.best_price.tix|floatformat:2 }}</td>
+                                {% if not mainboard_item.card.is_basic_land %}
+                                    {{ mainboard_item.card.best_price.tix|floatformat:2 }}
                                 {% endif %}
                             </td>
                         </tr>
@@ -66,9 +66,10 @@
                         </td>
                         <td class="text-end">{{ sideboard_item.card.get_mana_cost_html|safe }}</td>
                         <td class="text-end">
-                            {% if not sideboard_item.is_basic_land %}
-                                {{ sideboard_item.card.best_price.tix|floatformat:3 }}</td>
+                            {% if not sideboard_item.card.is_basic_land %}
+                                {{ sideboard_item.card.best_price.tix|floatformat:2 }}
                             {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             </table>
@@ -91,23 +92,23 @@
                     <span>{{ deck.created_at|date:"Y/m/d" }}</span>
                 </li>
 
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center data-bs-toggle="tooltip" data-bs-title="Created {{ deck.created_at|date:"Y/m/d" }}"">
                     Last updated
                     <span>{{ deck.updated_at|date:"Y/m/d" }}</span>
                 </li>
 
+                {% if deck.source or deck.source_url %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Source
                     <span>
                         {% if deck.source %}
                             <a href="{{ deck.source_url }}">{{ deck.source }}</a>
-                        {% elif deck.source_url %}
-                            <a href="{{ deck.source_url }}">Link</a>
                         {% else %}
-                            Unknown
+                            <a href="{{ deck.source_url }}">Link</a>
                         {% endif %}
                     </span>
                 </li>
+                {% endif %}
 
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Price

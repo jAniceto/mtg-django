@@ -284,7 +284,7 @@ class Card(models.Model):
     
     def is_basic_land(self):
         """Returns True if Card is a Basic Land, otherwise returns False."""
-        if 'Basic' in self.type_line:
+        if 'Basic Land' in self.type_line:
             return True
         return False
     

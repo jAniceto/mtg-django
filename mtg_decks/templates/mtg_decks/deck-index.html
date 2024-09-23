@@ -8,8 +8,8 @@
             <thead>
                 <tr>
                     <th scope="col">Deck name</th>
-                    <th scope="col">Color</th>
-                    <th scope="col">Price</th>
+                    <th scope="col" class="text-center">Color</th>
+                    <th scope="col" class="text-center">Price (tix)</th>
                     <th scope="col">Tags</th>
                 </tr>
             </thead>
@@ -17,21 +17,23 @@
 
                 {% for deck in decks %}
                     <tr>
-                        <td>
+                        <td class="position-relative">
                             <a href="{% url 'deck' deck.pk deck.slug %}" class="text-decoration-none stretched-link">
                                 {{ deck.name }}
                             </a>
                         </td>
-                        <td>
+                        <td class="text-center">
                             {% for color in deck.get_colors %}
                                 <i class="ms ms-cost ms-{{ color }}"></i>
                             {% endfor %}
                         </td>
-                        <td class="text-end">
-                            -
+                        <td class="text-center">
+                            {{ deck.get_price.total|floatformat:2 }}
                         </td>
                         <td>
-                            -
+                            {% for tag in deck.tags.all %}
+                                <kbd>{{ tag }}</kbd>
+                            {% endfor %}
                         </td>
                     </tr>
                 {% endfor %}

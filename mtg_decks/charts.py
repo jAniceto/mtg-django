@@ -25,7 +25,7 @@ def plot_deck_cmc_curve(deck):
     fig.update_layout(
         # title='CMC Distribution',
         xaxis_title='Converted mana cost',
-        margin=dict(l=0, r=0, t=5, b=0),  # Remove margins
+        margin=dict(l=0, r=0, t=8, b=0),  # Remove margins
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
         height=250,
