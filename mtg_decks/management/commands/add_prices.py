@@ -13,7 +13,7 @@ class Command(BaseCommand):
         URL_PRICES = 'https://www.goatbots.com/download/price-history.zip'
         URL_CARD_DEFINITIONS = 'https://www.goatbots.com/download/card-definitions.zip'
 
-        data_dir = settings.BASE_DIR
+        data_dir = settings.BASE_DIR / 'data'
         goatbots.download_data(URL_PRICES, data_dir)
         goatbots.download_data(URL_CARD_DEFINITIONS, data_dir)
 
