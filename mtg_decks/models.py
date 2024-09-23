@@ -2,6 +2,7 @@ from collections import OrderedDict
 import math
 
 from django.db import models
+from django.db.models import F, Sum
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
 from django.utils import timezone
@@ -438,6 +439,18 @@ class Deck(models.Model):
         for cardsb in sideboard:
             deck_str += f'{cardsb.quantity} {cardsb.card.name}\n'
         return deck_str
+    
+    def get_price(self):
+        """Calculate the mainboard, sideboard, and total deck price."""
+        prices = dict()
+        prices['mainboard'] = self.cardmainboard_set.aggregate(
+            mainboard_price=Sum(F('quantity') * F('card__best_price__tix'))
+        )['mainboard_price']
+        prices['sideboard'] = self.cardsideboard_set.aggregate(
+            sideboard_price=Sum(F('quantity') * F('card__best_price__tix'))
+        )['sideboard_price']
+        prices['total'] = prices['mainboard'] + prices['sideboard']
+        return prices
 
 
 class CardMainboard(models.Model):
