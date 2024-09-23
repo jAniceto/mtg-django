@@ -25,6 +25,11 @@
                                 </div>
                             </td>
                             <td class="text-end">{{ mainboard_item.card.get_mana_cost_html|safe }}</td>
+                            <td class="text-end">
+                                {% if not mainboard_item.is_basic_land %}
+                                    {{ mainboard_item.card.best_price.tix|floatformat:2 }}</td>
+                                {% endif %}
+                            </td>
                         </tr>
 
                     {% endfor %}
@@ -60,6 +65,10 @@
                             </div>
                         </td>
                         <td class="text-end">{{ sideboard_item.card.get_mana_cost_html|safe }}</td>
+                        <td class="text-end">
+                            {% if not sideboard_item.is_basic_land %}
+                                {{ sideboard_item.card.best_price.tix|floatformat:2 }}</td>
+                            {% endif %}
                     </tr>
                 {% endfor %}
             </table>

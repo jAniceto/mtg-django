@@ -280,6 +280,22 @@ class Card(models.Model):
         if 'Land' in self.type_line:
             return True
         return False
+    
+    def is_basic_land(self):
+        """Returns True if Card is a Basic Land, otherwise returns False."""
+        if 'Basic' in self.type_line:
+            return True
+        return False
+    
+
+class BestPrice(models.Model):
+    """Model for the best proce of a Card."""
+    card = models.OneToOneField(Card, related_name='best_price', on_delete=models.CASCADE)
+    set_abbreviation = models.CharField(max_length=10)
+    tix = models.DecimalField(max_digits=6, decimal_places=3)
+
+    def __str__(self):
+        return f'{self.card.name}: {self.tix}'
 
 
 class Deck(models.Model):
