@@ -12,7 +12,7 @@ def index(request):
     # Base queryset (all decks)
     decks = Deck.objects.prefetch_related(
         Prefetch('cardmainboard_set', queryset=CardMainboard.objects.select_related('card')),
-        Prefetch('cardsideboard_set', queryset=CardSideboard.objects.select_related('card'))
+        Prefetch('cardsideboard_set', queryset=CardSideboard.objects.select_related('card')),
     ).all()
 
     # Get form data
@@ -42,7 +42,7 @@ def index(request):
         'decklist_view': settings.DECKLIST_DISPLAY,
         'new_badge_limit_days': settings.NEW_BADGE_LIMIT_DAYS,
         'decks': decks_page,
-        'form': DeckFilterForm()
+        'form': DeckFilterForm(),
     }
     if request.htmx:
         # Render partial (new page of decks)
@@ -54,7 +54,7 @@ def index(request):
 def download_deck_txt(request, deck_pk):
     """Download a decklist in .txt."""
     deck = get_object_or_404(Deck, pk=deck_pk)
-    
+
     filename = deck.name.replace(' ', '-')
     text_decklist = deck.to_string()
 

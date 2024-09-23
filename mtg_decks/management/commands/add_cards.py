@@ -35,12 +35,12 @@ class Command(BaseCommand):
 
         # Add cards
         self.stdout.write('Processing...')
-        n_created = 0 
+        n_created = 0
         n_fails = 0
         for card_name in cards:
             # Check if card exists, otherwise create a new card object
             _, result = get_or_create_card(card_name)
-            
+
             if result == 'exists':
                 pass
             elif result == 'created':
@@ -50,4 +50,6 @@ class Command(BaseCommand):
 
         # Summarize
         self.stdout.write('--------------------')
-        self.stdout.write(f'Total cards: {len(cards)}\nExisting: {len(cards) - n_created - n_fails}\nCreated: {n_created}\nFails: {n_fails}')
+        self.stdout.write(
+            f'Total cards: {len(cards)}\nExisting: {len(cards) - n_created - n_fails}\nCreated: {n_created}\nFails: {n_fails}'
+        )

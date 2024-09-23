@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('mtg_decks', '0003_alter_cardmainboard_options_and_more'),
     ]

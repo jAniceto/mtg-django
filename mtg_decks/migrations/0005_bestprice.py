@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('mtg_decks', '0004_alter_tag_name'),
     ]
@@ -14,10 +13,22 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BestPrice',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
+                    ),
+                ),
                 ('set_abbreviation', models.CharField(max_length=10)),
                 ('tix', models.DecimalField(decimal_places=3, max_digits=6)),
-                ('card', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='best_price', to='mtg_decks.card')),
+                (
+                    'card',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='best_price',
+                        to='mtg_decks.card',
+                    ),
+                ),
             ],
         ),
     ]

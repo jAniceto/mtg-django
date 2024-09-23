@@ -27,12 +27,15 @@ class Command(BaseCommand):
             best_price = goatbots.get_best_price(prices)
 
             # Add or update prices
-            price, created = BestPrice.objects.update_or_create(card=card, defaults={'set_abbreviation': best_price['set'], 'tix': best_price['price']})
+            price, created = BestPrice.objects.update_or_create(
+                card=card,
+                defaults={'set_abbreviation': best_price['set'], 'tix': best_price['price']},
+            )
 
             if created:
                 n_created += 1
             else:
                 n_updated += 1
-        
+
         self.stdout.write('Done.')
         self.stdout.write(f'Created {n_created} prices and updated {n_updated}.')

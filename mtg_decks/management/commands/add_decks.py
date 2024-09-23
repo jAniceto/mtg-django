@@ -95,7 +95,9 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('-f', '--filepath', type=str, help='Path to decks JSON file.')
         parser.add_argument('-m', '--max', type=int, help='Maximum number of decks to load.')
-        parser.add_argument('--del', action='store_true', help='Delete all decks not in the in the input data.')
+        parser.add_argument(
+            '--del', action='store_true', help='Delete all decks not in the in the input data.'
+        )
 
     def handle(self, *args, **options):
         json_file = options['filepath']
@@ -118,10 +120,10 @@ class Command(BaseCommand):
         # 2) If --del was passed, delete all decks that are not in the provided data
         if delete_other_decks:
             self.stdout.write('Searching decks for deletion...')
-            
+
             deck_names_in_data = [d['name'] for d in decks]  # list of deck names in the data
             deck_objs = Deck.objects.all()
-            
+
             for deck_obj in deck_objs:
                 if deck_obj.name not in deck_names_in_data:
                     self.stdout.write(f'Deleted {deck_obj.name} deck.')
@@ -138,7 +140,7 @@ class Command(BaseCommand):
                 self.stdout.write(f'Created {deck.name}.')
             else:
                 self.stdout.write(f'Updated {deck.name}.')
-            
+
             # Print errors
             for card_name in errors:
                 self.stdout.write(f' - Error adding {card_name} to {deck.name}.')

@@ -34,7 +34,7 @@ class Command(BaseCommand):
         for tag_name in TAGS:
             tag, created = Tag.objects.get_or_create(name=tag_name)
             n_created += 1
-        
+
         # Summarize
         self.stdout.write('Adding tags...')
         self.stdout.write(f'Added {n_created} tags out of {len(TAGS)} provided.')

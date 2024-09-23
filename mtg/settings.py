@@ -173,4 +173,4 @@ DECKLIST_DISPLAY = 'by_type'
 DECKLIST_COL_SPLIT_MARGIN = -2
 
 # Maximum days for a deck to be considered new (new badge)
-NEW_BADGE_LIMIT_DAYS = 1  
+NEW_BADGE_LIMIT_DAYS = 1

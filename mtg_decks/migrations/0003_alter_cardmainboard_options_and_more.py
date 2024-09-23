@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('mtg_decks', '0002_card_cardmainboard_cardsideboard_deck_and_more'),
     ]
@@ -25,9 +24,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Tag',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
+                    ),
+                ),
                 ('name', models.CharField(max_length=30)),
-                ('decks', models.ManyToManyField(blank=True, related_name='tags', to='mtg_decks.deck')),
+                (
+                    'decks',
+                    models.ManyToManyField(blank=True, related_name='tags', to='mtg_decks.deck'),
+                ),
             ],
             options={
                 'ordering': ['name'],

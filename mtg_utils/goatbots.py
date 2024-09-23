@@ -55,11 +55,15 @@ def get_prices(card_name: str, prices_dir: Path, exclude_foils=False):
         card_defs = json.load(f)
 
     # Find all versions of desired card
-    card_objects = {k: v for k, v in card_defs.items() if isinstance(v, dict) and card_name in v.values()}
+    card_objects = {
+        k: v for k, v in card_defs.items() if isinstance(v, dict) and card_name in v.values()
+    }
 
     # Exclude foils?
     if exclude_foils:
-        card_objects = {k: v for k, v in card_objects.items() if isinstance(v, dict) and v['foil'] == 0}
+        card_objects = {
+            k: v for k, v in card_objects.items() if isinstance(v, dict) and v['foil'] == 0
+        }
 
     # Load card prices file
     with open(prices_file, 'r') as f:
@@ -68,12 +72,14 @@ def get_prices(card_name: str, prices_dir: Path, exclude_foils=False):
     # Return a prices dictionary
     prices = []
     for mtgo_id, values in card_objects.items():
-        prices.append({
-            'name': card_name,
-            'set': values['cardset'],
-            'foil': False if values['foil'] == 0 else True,
-            'price': goatbot_prices[mtgo_id],
-        })
+        prices.append(
+            {
+                'name': card_name,
+                'set': values['cardset'],
+                'foil': False if values['foil'] == 0 else True,
+                'price': goatbot_prices[mtgo_id],
+            }
+        )
     return prices
 
 

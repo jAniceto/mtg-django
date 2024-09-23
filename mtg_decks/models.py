@@ -281,16 +281,17 @@ class Card(models.Model):
         if 'Land' in self.type_line:
             return True
         return False
-    
+
     def is_basic_land(self):
         """Returns True if Card is a Basic Land, otherwise returns False."""
         if 'Basic Land' in self.type_line:
             return True
         return False
-    
+
 
 class BestPrice(models.Model):
     """Model for the best proce of a Card."""
+
     card = models.OneToOneField(Card, related_name='best_price', on_delete=models.CASCADE)
     set_abbreviation = models.CharField(max_length=10)
     tix = models.DecimalField(max_digits=6, decimal_places=3)
@@ -348,19 +349,21 @@ class Deck(models.Model):
             # Newly created object, so set slug
             self.slug = slugify(self.name)
         super(Deck, self).save(*args, **kwargs)
-    
+
     def get_categorized_mainboard(self):
         """Returns a dict of the mainboard card categorized by card type (creature, artifact, etc)."""
         mainboard = self.cardmainboard_set.all()
-        categorized_mainboard = OrderedDict([
-            ('creature', []),
-            ('instant', []),
-            ('sorcery', []),
-            ('artifact', []),
-            ('enchantment', []),
-            ('land', []),
-            ('other', []),
-        ])
+        categorized_mainboard = OrderedDict(
+            [
+                ('creature', []),
+                ('instant', []),
+                ('sorcery', []),
+                ('artifact', []),
+                ('enchantment', []),
+                ('land', []),
+                ('other', []),
+            ]
+        )
         for cardmb in mainboard:
             if 'Land' in cardmb.card.type_line:
                 categorized_mainboard['land'].append(cardmb)
@@ -377,16 +380,18 @@ class Deck(models.Model):
             else:
                 categorized_mainboard['other'].append(cardmb)
         return categorized_mainboard
-    
+
     def get_categorized_mainboard_split_type(self):
-        """For the OrderedDict returned by Deck.get_categorized_mainboard() it finds a the point where we can 
-        split the type groups into 2 and have roughly the same number of card rows in each division. 
+        """For the OrderedDict returned by Deck.get_categorized_mainboard() it finds a the point where we can
+        split the type groups into 2 and have roughly the same number of card rows in each division.
         Used to split decklist into two columns in the deck display frontend.
         """
         categorized_mainboard = self.get_categorized_mainboard()
         sideboard = self.cardsideboard_set.all()
         total_items = sum(len(v) for v in categorized_mainboard.values()) + len(sideboard)
-        half_items = (total_items - settings.DECKLIST_COL_SPLIT_MARGIN) / 2  # 2 gives a margin to account for group titles
+        half_items = (
+            total_items - settings.DECKLIST_COL_SPLIT_MARGIN
+        ) / 2  # 2 gives a margin to account for group titles
 
         running_total = 0
 
@@ -394,16 +399,16 @@ class Deck(models.Model):
             running_total += len(value)
             if running_total >= half_items:
                 return key
-    
+
     def max_cards_col(self):
         """Estimates how many unique cards should appear in each of the two decklist columns
-        so that columns are of similar height. 
+        so that columns are of similar height.
         max_cards = floor( [(mainboard cards) + (sideboard cards) + (margin)] / 2 )
         """
         margin = 3  # safety margin to give
         n_cards_main = len(self.cardmainboard_set.all())
         n_cards_side = len(self.cardsideboard_set.all())
-        return math.floor( (n_cards_main + n_cards_side + margin) / 2 )
+        return math.floor((n_cards_main + n_cards_side + margin) / 2)
 
     def get_colors(self):
         """Get a list of color codes for the deck, according to its color family."""
@@ -427,7 +432,7 @@ class Deck(models.Model):
         """Create the CMC bar chart for a deck."""
         fig = plot_deck_cmc_curve(self)
         return fig.to_html(full_html=True, config={'staticPlot': True, 'displayModeBar': False})
-    
+
     def to_string(self):
         """Convert the decklist in a string."""
         mainboard = self.cardmainboard_set.all()
@@ -439,7 +444,7 @@ class Deck(models.Model):
         for cardsb in sideboard:
             deck_str += f'{cardsb.quantity} {cardsb.card.name}\n'
         return deck_str
-    
+
     def get_price(self):
         """Calculate the mainboard, sideboard, and total deck price."""
         prices = dict()
@@ -487,6 +492,7 @@ class CardSideboard(models.Model):
 
 class Tag(models.Model):
     """Tags to describe the decks."""
+
     name = models.CharField(max_length=30, unique=True)
     decks = models.ManyToManyField(Deck, related_name='tags', blank=True)
 
@@ -511,7 +517,7 @@ def get_or_create_card(card_name):
         if scryfall_card is None:
             print(f'{card_name} was not found.')
             return None, None
-        
+
         # If card was found in Scryfall, add to database
         card = Card(name=card_name)
         card.save()
@@ -542,7 +548,7 @@ def update_or_create_deck(deck_dict):
     """
     # Get deck or create a new deck
     deck, created = Deck.objects.get_or_create(name=deck_dict['name'])
-    
+
     # Add or update info
     # self.format_name = 'Pauper'
     try:
@@ -591,4 +597,3 @@ def update_or_create_deck(deck_dict):
         # Add card object to sideboard
         CardSideboard.objects.create(sideboard=deck, card=card, quantity=card_qty)
     return deck, created, errors
-    
