@@ -1,9 +1,9 @@
 # MTG Django
 
-A Django server and frontend with several.
+A Django server and frontend with several tolls for Magic the Gathering.
 
 
-## Main tech
+## Main tech used
 
 - Django 5
 - Bootstrap 5
@@ -34,8 +34,8 @@ $ venv/Scripts/activate
 4. Add initial data
 
 ```
-(venv) $ python manage.py add_cards
-(venv) $ python manage.py add_decks
+(venv) $ python manage.py add_cards -f data/cards.json
+(venv) $ python manage.py add_decks -f data/decks.json --max 40
 (venv) $ python manage.py add_tags
 (venv) $ python manage.py add_prices
 ```
