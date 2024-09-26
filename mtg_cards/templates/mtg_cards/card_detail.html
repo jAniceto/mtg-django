@@ -1,0 +1,67 @@
+{% extends "mtg_decks/base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row my-4">
+        
+        <!-- Card image -->
+        <div class="col-md-3 mb-3 mb-md-0">
+            <figure class="figure">
+                <a href="{{ card.scryfall_url }}" target="_blank">
+                    <img src="{{ card.img_url }}" class="figure-img img-fluid" alt="Card image">
+                </a>
+                <figcaption class="figure-caption text-center">Click figure to go to Scryfall page.</figcaption>
+            </figure>
+        </div>
+
+        <!-- Card info -->
+        <div class="col-md-4 mb-3 mb-md-0">
+
+            <!-- Card details -->
+            <div class="mb-3">
+                <ul class="list-group">
+                    <li class="list-group-item active">
+                        <h4 class="mb-0">{{ card.name }}</h4>
+                        <p class="text-secondary mb-0 mt-1">{{ card.type_line }}</p>
+                    </li>
+
+                    <li class="list-group-item">
+                        <p class="mb-0">{{ card.oracle_text|parse_mana_symbols|safe|linebreaksbr }}</p>
+
+                        {% if card.flavor_text %}
+                            <hr class="mx-1">
+                            <p class="text-secondary mt-0 mb-0"><em>{{ card.flavor_text }}</em></p>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Prices -->
+            <div class="mb-3">
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-secondary">
+                        <p class="mb-0">Best price</p>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ card.best_price.set_abbreviation }}
+                        <span>{{ card.best_price.tix }} tix</span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <small class="text-body-secondary">Data from <a href="https://www.goatbots.com/" target="_blank" class="text-reset">Goatbots</a></small>
+                        <small class="text-body-secondary">Last updated {{ card.best_price.updated_at|date:"Y/m/d" }}</small>
+                    </li>
+                    
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

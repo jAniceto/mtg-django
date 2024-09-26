@@ -16,7 +16,7 @@
                             <td>{{ mainboard_item.quantity }}</td>
                             <td>
                                 <div class="position-relative">
-                                    <a href="#" class="link-body-emphasis text-decoration-none hover-link" data-image-url="{{ mainboard_item.card.img_url }}">
+                                    <a href="{% url 'card_detail' mainboard_item.card.pk %}" class="link-body-emphasis text-decoration-none hover-link" data-image-url="{{ mainboard_item.card.img_url }}">
                                         {{ mainboard_item.card.name }}
                                     </a>
                                     <div class="hover-image">
@@ -56,7 +56,7 @@
                         <td>{{ sideboard_item.quantity }}</td>
                         <td>
                             <div class="position-relative">
-                                <a href="#" class="link-body-emphasis text-decoration-none hover-link" data-image-url="{{ sideboard_item.card.img_url }}">
+                                <a href="{% url 'card_detail' sideboard_item.card.pk %}" class="link-body-emphasis text-decoration-none hover-link" data-image-url="{{ sideboard_item.card.img_url }}">
                                     {{ sideboard_item.card.name }}
                                 </a>
                                 <div class="hover-image">
