@@ -13,7 +13,8 @@
             <ul class="navbar-nav ms-auto">
 
                 <a class="nav-link" href="#">About</a>
-                <a class="nav-link" href="{% url 'deck_index' %}">Index</a>
+                <a class="nav-link" href="{% url 'cards_home' %}">Cards</a>
+                <a class="nav-link" href="{% url 'deck_index' %}">Decks</a>
 
                 {% if user.is_authenticated %}
                 <div class="vr mx-3 text-dark"></div>

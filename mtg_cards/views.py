@@ -1,5 +1,22 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 from mtg_decks.models import Card
+
+
+def cards_home(request):
+    """Home page"""
+
+    # Handle card search
+    query = request.GET.get('q')
+    if query:
+        try:
+            card = Card.objects.all().get(name__iexact=query)
+            return redirect('card_detail', pk=card.pk)
+        except ObjectDoesNotExist:
+            messages.error(request, 'Card not found. Try again.')
+
+    return render(request, 'mtg_cards/home.html')
 
 
 def card_detail(request, pk):
