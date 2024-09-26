@@ -1,6 +1,7 @@
 asgiref==3.8.1
 certifi==2024.8.30
 charset-normalizer==3.3.2
+colorama==0.4.6
 crispy-bootstrap5==2024.2
 Django==5.1.1
 django-crispy-forms==2.3
@@ -14,6 +15,7 @@ packaging==24.1
 pandas==2.2.2
 plotly==5.24.0
 python-dateutil==2.9.0.post0
+pytweening==1.2.0
 pytz==2024.1
 requests==2.32.3
 ruff==0.6.4
