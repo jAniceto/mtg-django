@@ -16,12 +16,6 @@ from mtg_utils import scryfall
 from mtg_decks.charts import plot_deck_cmc_curve
 
 
-class User(AbstractUser):
-    """User model."""
-
-    pass
-
-
 class Card(models.Model):
     """Card model. Containing card information."""
 
