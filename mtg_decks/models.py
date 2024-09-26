@@ -289,6 +289,7 @@ class BestPrice(models.Model):
     card = models.OneToOneField(Card, related_name='best_price', on_delete=models.CASCADE)
     set_abbreviation = models.CharField(max_length=10)
     tix = models.DecimalField(max_digits=6, decimal_places=3)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.card.name}: {self.tix}'
