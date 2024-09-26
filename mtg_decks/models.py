@@ -269,6 +269,14 @@ class Card(models.Model):
     def get_mana_cost_html(self):
         """Method to return mana cost as HTML symbols"""
         return mana_cost_html(self.mana_cost)
+    
+    def get_mana_cost_html_face1(self):
+        """Method to return mana cost as HTML symbols for face 1"""
+        return mana_cost_html(self.face1_mana_cost)
+    
+    def get_mana_cost_html_face2(self):
+        """Method to return mana cost as HTML symbols for face 2"""
+        return mana_cost_html(self.face2_mana_cost)
 
     def is_land(self):
         """Returns True if Card is a Land, otherwise returns False."""

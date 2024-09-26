@@ -9,34 +9,113 @@
         
         <!-- Card image -->
         <div class="col-md-3 mb-3 mb-md-0">
-            <figure class="figure">
-                <a href="{{ card.scryfall_url }}" target="_blank">
+            {% if card.faces %}
+                <div id="cf">
+                    <img src="{{ card.face1_img_url }}" class="figure-img img-fluid card-front" alt="Card image from front side">
+                    <img src="{{ card.face2_img_url }}" class="figure-img img-fluid card-back" alt="Card image from back side">
+                </div>
+            {% else %}
+                <figure class="figure">
+                    <a href="{{ card.scryfall_url }}" target="_blank">
                     <img src="{{ card.img_url }}" class="figure-img img-fluid" alt="Card image">
+                    </a>
+                </figure>
+            {% endif %}
+
+            {% comment %} <div class="mt-3">
+                <a type="button" class="btn btn-outline-info w-100" href="{{ card.scryfall_url }}" target="_blank">
+                    Scryfall
                 </a>
-                <figcaption class="figure-caption text-center">Click figure to go to Scryfall page.</figcaption>
-            </figure>
+            </div> {% endcomment %}
         </div>
 
         <!-- Card info -->
         <div class="col-md-4 mb-3 mb-md-0">
 
-            <!-- Card details -->
             <div class="mb-3">
-                <ul class="list-group">
-                    <li class="list-group-item active">
-                        <h4 class="mb-0">{{ card.name }}</h4>
-                        <p class="text-secondary mb-0 mt-1">{{ card.type_line }}</p>
-                    </li>
+                {% if card.faces %} <!-- Show info for both card faces -->
+                    <ul class="list-group">
+                        <!-- Face 1 name and type -->
+                        <li class="list-group-item active">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h4 class="mb-1"><i class="ms ms-dfc-front"></i> {{ card.face1_name }}</h4>
+                                <span>{{ card.get_mana_cost_html_face1|safe }}</span>
+                            </div>
+                            <p class="text-secondary mb-1">{{ card.face1_type_line }}</p>
+                        </li>
 
-                    <li class="list-group-item">
-                        <p class="mb-0">{{ card.oracle_text|parse_mana_symbols|safe|linebreaksbr }}</p>
+                        <!-- Face 1 oracle and flavor text -->
+                        <li class="list-group-item">
+                            <p>{{ card.face1_oracle_text|parse_mana_symbols|safe|linebreaksbr }}</p>
+                            
+                            {% if card.face1_flavor_text %}
+                                <p class="text-secondary mt-0 mb-0"><em>{{ card.face1_flavor_text }}</em></p>
+                            {% endif %}
+                        </li>
 
-                        {% if card.flavor_text %}
-                            <hr class="mx-1">
-                            <p class="text-secondary mt-0 mb-0"><em>{{ card.flavor_text }}</em></p>
+                        <!-- Face 1 power and toughness -->
+                        {% if card.face1_power %}
+                            <li class="list-group-item text-end">
+                                {{ card.face1_power }} / {{ card.face1_toughness }}
+                            </li>
                         {% endif %}
-                    </li>
-                </ul>
+
+                        <!-- Face 2 name and type -->
+                        <li class="list-group-item active">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h4 class="mb-1"><i class="ms ms-dfc-back"></i> {{ card.face2_name }}</h4>
+                                <span>{{ card.get_mana_cost_html_face2|safe }}</span>
+                            </div>
+                            <p class="text-secondary mb-1">{{ card.face2_type_line }}</p>
+                        </li>
+
+                        <!-- Face 2 oracle and flavor text -->
+                        <li class="list-group-item">
+                            <p>{{ card.face2_oracle_text|parse_mana_symbols|safe|linebreaksbr }}</p>
+                            
+                            {% if card.face2_flavor_text %}
+                                <p class="text-secondary mt-0 mb-0"><em>{{ card.face2_flavor_text }}</em></p>
+                            {% endif %}
+                        </li>
+
+                        <!-- Face 2 power and toughness -->
+                        {% if card.face2_power %}
+                            <li class="list-group-item text-end">
+                                {{ card.face2_power }} / {{ card.face2_toughness }}
+                            </li>
+                        {% endif %}
+                    </ul>
+                
+                {% else %} <!-- Show info for unique face -->
+                    
+                    <ul class="list-group">
+                        <!-- Card name and type -->
+                        <li class="list-group-item active">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h4 class="mb-1">{{ card.name }}</h4>
+                                <span>{{ card.get_mana_cost_html|safe }}</span>
+                            </div>
+                            <p class="text-secondary mb-1">{{ card.type_line }}</p>
+                        </li>
+
+                        <!-- Oracle and flavor text -->
+                        <li class="list-group-item">
+                            <p>{{ card.oracle_text|parse_mana_symbols|safe|linebreaksbr }}</p>
+                            
+                            {% if card.flavor_text %}
+                                <p class="text-secondary mt-0 mb-0"><em>{{ card.flavor_text }}</em></p>
+                            {% endif %}
+                        </li>
+
+                        <!-- Power and toughness -->
+                        {% if card.power %}
+                            <li class="list-group-item text-end">
+                                {{ card.power }} / {{ card.toughness }}
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+
             </div>
 
             <!-- Prices -->
