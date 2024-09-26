@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_filters',
     # Project apps
     'mtg_decks.apps.MtgDecksConfig',  # Pauper Deck Library app
+    'mtg_cards.apps.MtgCardsConfig',  # MtG Cards app
 ]
 
 MIDDLEWARE = [

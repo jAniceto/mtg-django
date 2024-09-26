@@ -24,4 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # Deck Library app
     path('', include('mtg_decks.urls')),
+    # Cards app
+    path('cards/', include('mtg_cards.urls')),
 ] + debug_toolbar_urls()
