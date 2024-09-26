@@ -1,10 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
+from django.core.management import call_command
 from django.http import HttpResponse
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.db.models import Prefetch
-from mtg_decks.models import Deck, CardMainboard, CardSideboard
-from mtg_decks.forms import DeckFilterForm
+from mtg_decks.models import Deck, CardMainboard, CardSideboard, update_or_create_deck
+from mtg_decks.forms import DeckFilterForm, DecksJSONUploadForm
+import json
 
 
 def index(request):
@@ -89,3 +93,53 @@ def deck(request, pk, slug):
         'deck': deck,
     }
     return render(request, 'mtg_decks/deck.html', context)
+
+
+@login_required
+def management(request):
+    """Several tools to update the site."""
+
+    deck_json_upload_form = DecksJSONUploadForm()
+    
+    context = {'deck_json_upload_form': deck_json_upload_form}
+    return render(request, 'mtg_decks/management.html', context)
+
+
+def process_deck_json(request):
+    form = DecksJSONUploadForm(request.POST, request.FILES)
+
+    if form.is_valid() and request.htmx:
+        file = request.FILES['file']
+        try:
+            # Parse the JSON file
+            decks_data = json.load(file)
+
+            created_decks = []
+            updated_decks = []
+            err_decks = []
+            for deck_dict in decks_data:
+                # Add or update deck
+                deck, created, errors = update_or_create_deck(deck_dict)
+                
+                if created:
+                    created_decks.append(deck.name)
+                elif errors:
+                    err_decks.append(deck.name)
+                else:
+                    updated_decks.append(deck.name)
+
+            context = {
+                'created_decks': created_decks,
+                'updated_decks': updated_decks,
+                'err_decks': err_decks,
+            }
+            # return HttpResponse('Decks update compleated!')
+            return render(request, 'mtg_decks/partials/log_updated_decks.html', context)
+
+        except:
+            return HttpResponse('Failed')
+
+
+def update_card_prices(request):
+    call_command('add_prices')
+    return HttpResponse('Done!')

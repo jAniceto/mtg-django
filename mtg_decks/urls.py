@@ -7,6 +7,9 @@ urlpatterns = [
     path('deck-index', views.deck_index, name='deck_index'),
     path('deck/<int:pk>-<str:slug>/', views.deck, name='deck'),
     path('download-deck-txt/<int:deck_pk>/', views.download_deck_txt, name='download_deck_txt'),
+    path('management/', views.management, name='management'),
     # HTMX views
     path('copy-decklist/<int:deck_pk>/', views.copy_decklist, name='copy_decklist'),
+    path('process-deck-json/', views.process_deck_json, name='process_deck_json'),
+    path('update-card-prices/', views.update_card_prices, name='update_card_prices'),
 ]
