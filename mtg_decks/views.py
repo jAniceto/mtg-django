@@ -14,10 +14,7 @@ import json
 def index(request):
     """Homepage. List all decks using infinite scroll with HTMX."""
     # Base queryset (all decks)
-    decks = Deck.objects.prefetch_related(
-        Prefetch('cardmainboard_set', queryset=CardMainboard.objects.select_related('card')),
-        Prefetch('cardsideboard_set', queryset=CardSideboard.objects.select_related('card')),
-    ).all()
+    decks = Deck.objects.prefetch_related('cardmainboard_set__card__best_price', 'cardsideboard_set__card__best_price').all()
 
     # Get form data
     form = DeckFilterForm(request.GET)
