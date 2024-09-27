@@ -1,0 +1,62 @@
+{% load widget_tweaks %}
+
+<form id="deck-filter-form" 
+    hx-get="{% url 'index' %}" 
+    hx-target="#decks-container" 
+    hx-trigger="submit" 
+    hx-indicator="#filter-spinner" 
+    hx-on::config-request="document.getElementById('filter-spinner').classList.remove('d-none');" 
+    hx-on::after-request="document.getElementById('filter-spinner').classList.add('d-none');">
+
+    <div class="row">
+        <div class="col-md-4">
+            <label for="{{ form.name.id_for_label }}" class="form-label">By name</label>
+            {{ form.name|add_class:"form-control" }}
+
+            <label for="{{ form.family.id_for_label }}" class="form-label mt-3">By guild/shard/clan</label>
+            {{ form.family|add_class:"form-select" }}
+        </div>
+
+        <div class="col-md-4">
+            <label for="{{ form.card.id_for_label }}" class="form-label">By card in mainboard</label>
+            {{ form.card|add_class:"form-control"|attr:"list:pauper-card-names"|attr:"autocomplete:off" }}
+            <datalist id="pauper-card-names"></datalist>
+
+            <label for="{{ form.card_sb.id_for_label }}" class="form-label mt-3">By card in sideboard</label>
+            {{ form.card_sb|add_class:"form-control"|attr:"list:pauper-card_sb-names"|attr:"autocomplete:off" }}
+            <datalist id="pauper-card_sb-names"></datalist>
+        </div>
+
+        <div class="col-md-4">
+            <label for="{{ form.tag.id_for_label }}" class="form-label">By tag</label>
+            {{ form.tag|add_class:"form-select" }}
+
+            <label for="{{ form.sort_attribute.id_for_label }}" class="form-label mt-3">Sort by</label>
+            <div class="input-group">
+                {{ form.sort_attribute|add_class:"form-select" }}
+                {{ form.sort_direction|add_class:"btn-check" }}
+
+                {% for radio in form.sort_direction %}
+                    <div class="input-group-text">
+                        {{ radio }}
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-10">
+            <button type="submit" class="btn btn-primary w-100">
+                <span id="filter-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                Search!
+            </button>
+        </div>
+
+        <div class="col-md-2">
+            <a href="{% url 'index' %}" type="button" class="btn btn-outline-primary w-100">Reset</a>
+        </div>
+    </div>
+
+</form>

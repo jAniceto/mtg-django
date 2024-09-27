@@ -22,7 +22,10 @@ def index(request):
         deck_name = form.cleaned_data['name']
         deck_family = form.cleaned_data['family']
         card_name = form.cleaned_data['card']
+        card_name_sb = form.cleaned_data['card_sb']
         deck_tag = form.cleaned_data['tag']
+        sort_attribute = form.cleaned_data['sort_attribute']
+        sort_direction = form.cleaned_data['sort_direction']
 
         # Filter base queryset
         if deck_name:
@@ -31,8 +34,24 @@ def index(request):
             decks = decks.filter(family__iexact=deck_family)
         if card_name:
             decks = decks.filter(mainboard__name__icontains=card_name)
+        if card_name_sb:
+            decks = decks.filter(sideboard__name__icontains=card_name_sb)
         if deck_tag:
             decks = decks.filter(tags=deck_tag)
+
+        # Sort
+        if sort_attribute == 'price':
+            if sort_direction == 'Asc':
+                decks = sorted(decks, key=lambda t: t.get_price()['total'])
+            else:
+                decks = sorted(decks, key=lambda t: t.get_price()['total'], reverse=True)
+            
+        else:
+            order_str = ''
+            if sort_direction == 'Desc':
+                order_str += '-'
+            order_str += sort_attribute
+            decks = decks.order_by(order_str)
 
     # Pagination
     page_number = request.GET.get('page', 1)  # defaults to 1 on first load
