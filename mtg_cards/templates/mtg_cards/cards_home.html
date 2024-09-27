@@ -1,0 +1,169 @@
+{% extends "mtg_decks/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- Card search section -->
+    <div class="row my-4">
+        <div class="col">
+            <div class="my-4">
+                <form class="" method="GET" action="">
+                    <div class="input-group input-group-lg mb-3">
+                        <span class="input-group-text">Card search</span>
+                        <input type="text" class="form-control" id="name-input" list="mtgo-card-names" autocomplete="off" name="q" value="{{ request.GET.q }}">
+                        <datalist id="mtgo-card-names"></datalist>
+                        <button class="btn btn-primary" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Card search section -->
+    <div class="row my-4">
+        <div class="col">
+            
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item active">
+                    <h4>Most expensive cards</h4>
+                    <p class="mb-0 text-secondary">
+                        <small>Data from <a href="https://www.goatbots.com/" target="_blank" class="text-reset">Goatbots</a>.</small>
+                    </p>    
+                
+                </li>
+                {% for card in cards_by_price %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'card_detail' card.pk %}">{{ card.name }}</a>
+                        <span>{{ card.best_price.tix|floatformat:2 }} tix</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+        <div class="col">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item active">
+                    <h4>Most used cards in mainboards</h4>
+                    <p class="mb-0 text-secondary">
+                        <small>by total count in mainboards.</small>
+                    </p>    
+                </li>
+
+                {% for card in cards_mb_totals %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'card_detail' card.pk %}">{{ card.name }}</a>
+                        <span>{{ card.mainboard_uses_total }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <ul class="list-group list-group-flush mt-3">
+                <li class="list-group-item active">
+                    <p class="mb-0 text-secondary">
+                        <small>by bumber of mainboards.</small>
+                    </p>    
+                </li>
+
+                {% for card in cards_mbs %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'card_detail' card.pk %}">{{ card.name }}</a>
+                        <span>{{ card.mainboard_uses }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+
+        <div class="col">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item active">
+                    <h4>Most used cards in sideboards</h4>
+                    <p class="mb-0 text-secondary">
+                        <small>by total count in sideboards.</small>
+                    </p>    
+                </li>
+
+                {% for card in cards_sb_totals %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'card_detail' card.pk %}">{{ card.name }}</a>
+                        <span>{{ card.sideboard_uses_total }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <ul class="list-group list-group-flush mt-3">
+                <li class="list-group-item active">
+                    <p class="mb-0 text-secondary">
+                        <small>by bumber of sideboards.</small>
+                    </p>    
+                </li>
+
+                {% for card in cards_sbs %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'card_detail' card.pk %}">{{ card.name }}</a>
+                        <span>{{ card.sideboard_uses }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+
+{% block javascript %}
+
+<script type="text/javascript">
+  // Get the <datalist> and <input> elements.
+  var dataList = document.getElementById('mtgo-card-names');
+  var input = document.getElementById('name-input');
+
+  // Create a new XMLHttpRequest.
+  var request = new XMLHttpRequest();
+
+  // Handle state changes for the request.
+  request.onreadystatechange = function(response) {
+    if (request.readyState === 4) {
+      if (request.status === 200) {
+        // Parse the JSON
+        var jsonOptions = JSON.parse(request.responseText);
+
+        // Loop over the JSON array.
+        jsonOptions['data'].forEach(function(item) {
+          // Create a new <option> element.
+          var option = document.createElement('option');
+          // Set the value using the item in the JSON array.
+          option.value = item;
+          // Add the <option> element to the <datalist>.
+          dataList.appendChild(option);
+        });
+
+        // Update the placeholder text.
+        input.placeholder = "Enter card name";
+      } else {
+        // An error occured :(
+        input.placeholder = "Couldn't load datalist options.";
+      }
+    }
+  };
+
+  // Update the placeholder text.
+  input.placeholder = "Loading options...";
+
+  // Set up and make the request.
+  request.open('GET', 'https://api.scryfall.com/catalog/card-names', true);
+  request.send();
+</script>
+
+{% endblock %}
