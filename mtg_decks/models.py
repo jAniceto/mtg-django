@@ -341,7 +341,7 @@ class Deck(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-created_at', 'name']
+        ordering = ['-updated_at', 'name']
 
     def __str__(self):
         return f'{self.name}'
