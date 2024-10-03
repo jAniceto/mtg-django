@@ -303,6 +303,19 @@ class BestPrice(models.Model):
         return f'{self.card.name}: {self.tix}'
 
 
+class Tag(models.Model):
+    """Tags to describe the decks."""
+
+    name = models.CharField(max_length=30, unique=True)
+    # decks = models.ManyToManyField(Deck, related_name='tags', blank=True)
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        ordering = ['name']
+
+
 class Deck(models.Model):
     """Deck model. Containing deck information."""
 
@@ -332,6 +345,7 @@ class Deck(models.Model):
     sideboard = models.ManyToManyField(
         Card, through='CardSideboard', related_name='sideboards', blank=True
     )
+    tags = models.ManyToManyField(Tag, related_name='decks', blank=True)
     description = models.TextField(blank=True, null=True)
     source = models.CharField(max_length=150, blank=True, null=True)
     source_url = models.URLField(blank=True, null=True)
@@ -491,19 +505,6 @@ class CardSideboard(models.Model):
 
     class Meta:
         ordering = ['card__cmc', '-card__mana_cost']
-
-
-class Tag(models.Model):
-    """Tags to describe the decks."""
-
-    name = models.CharField(max_length=30, unique=True)
-    decks = models.ManyToManyField(Deck, related_name='tags', blank=True)
-
-    def __str__(self):
-        return f'{self.name}'
-
-    class Meta:
-        ordering = ['name']
 
 
 def get_or_create_card(card_name):

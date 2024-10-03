@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col">
+        <div>
+            {% if deck.tags.all %}
+                {% for tag in deck.tags.all %}
+                    <a href="#" class="text-reset"><kbd>{{ tag }}</kbd></a>
+                {% endfor %}
+            {% else %}
+                &nbsp;
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if user.is_authenticated %}
+        <div class="col-1 text-end">
+            <button type="button" class="btn btn-outline-primary btn-sm"
+                hx-get="{% url 'edit_deck_tags' deck.pk %}" 
+                hx-target="next .edit-tags"
+                hx-swap="innerHTML">
+                Edit
+            </button>
+        </div>
+    {% endif %}
+</div>
+
+
+{% if user.is_authenticated %}
+<div class="row">
+    <div class="col">
+        <div class="edit-tags"></div>
+    </div>
+</div>
+{% endif %}

@@ -1,6 +1,5 @@
 {% for deck in decks %}
 
-
     <div class="card mt-5">
 
         <!-- Card header - deck name -->
@@ -39,14 +38,8 @@
         </div>
         
         <!-- Card footer - tags -->
-        <div class="card-footer text-body-secondary">
-            {% if deck.tags.all %}
-                {% for tag in deck.tags.all %}
-                    <a href="#" class="text-reset"><kbd>{{ tag }}</kbd></a>
-                {% endfor %}
-            {% else %}
-                &nbsp;
-            {% endif %}
+        <div class="card-footer text-body-secondary deck-tags-list">
+            {% include "mtg_decks/partials/deck_tags.html" %}
         </div>
 
     </div>

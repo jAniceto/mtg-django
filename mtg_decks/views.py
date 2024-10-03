@@ -6,8 +6,8 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Prefetch
-from mtg_decks.models import Deck, CardMainboard, CardSideboard, update_or_create_deck
-from mtg_decks.forms import DeckFilterForm, DecksJSONUploadForm
+from mtg_decks.models import Deck, update_or_create_deck
+from mtg_decks.forms import DeckFilterForm, DecksJSONUploadForm, DeckTagsForm
 import json
 
 
@@ -69,6 +69,26 @@ def index(request):
         return render(request, 'mtg_decks/partials/decks.html', context)
     # Otherwise, render the full page on the first load
     return render(request, 'mtg_decks/index.html', context)
+
+
+def edit_deck_tags(request, deck_pk):
+    """HTMX view. Adds a edit tags form and handles tags update."""
+    deck = get_object_or_404(Deck, pk=deck_pk)
+
+    if request.method == 'POST':
+        form = DeckTagsForm(request.POST, instance=deck)
+        if form.is_valid():
+            form.save()
+            context = {
+                'deck': deck,
+            }
+            return render(request, 'mtg_decks/partials/deck_tags.html', context)
+
+    context = {
+        'deck': deck,
+        'deck_tags_form': DeckTagsForm(instance=deck)
+    }
+    return render(request, 'mtg_decks/partials/edit_tags_form.html', context)
 
 
 def download_deck_txt(request, deck_pk):
