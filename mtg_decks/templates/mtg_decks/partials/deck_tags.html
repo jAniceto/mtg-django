@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col">
+    <div class="col align-self-center">
         <div>
             {% if deck.tags.all %}
                 {% for tag in deck.tags.all %}
@@ -13,10 +13,11 @@
     
     {% if user.is_authenticated %}
         <div class="col-1 text-end">
-            <button type="button" class="btn btn-outline-primary btn-sm"
+            <button type="button" class="btn btn-outline-primary btn-sm edit"
                 hx-get="{% url 'edit_deck_tags' deck.pk %}" 
                 hx-target="next .edit-tags"
-                hx-swap="innerHTML">
+                hx-swap="innerHTML"
+                hx-on::after-request="this.style.display='none'">
                 Edit
             </button>
         </div>
@@ -27,7 +28,9 @@
 {% if user.is_authenticated %}
 <div class="row">
     <div class="col">
-        <div class="edit-tags"></div>
+        <div class="edit-tags">
+            <!-- Edit tags form goes here -->
+        </div>
     </div>
 </div>
 {% endif %}
