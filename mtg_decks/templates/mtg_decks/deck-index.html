@@ -32,7 +32,7 @@
                         </td>
                         <td>
                             {% for tag in deck.tags.all %}
-                                <kbd>{{ tag }}</kbd>
+                                <span class="badge text-bg-secondary">{{ tag }}</span>
                             {% endfor %}
                         </td>
                     </tr>

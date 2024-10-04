@@ -3,7 +3,7 @@
         <div>
             {% if deck.tags.all %}
                 {% for tag in deck.tags.all %}
-                    <a href="#" class="text-reset"><kbd>{{ tag }}</kbd></a>
+                    <span class="badge text-bg-secondary">{{ tag }}</span>
                 {% endfor %}
             {% else %}
                 &nbsp;
