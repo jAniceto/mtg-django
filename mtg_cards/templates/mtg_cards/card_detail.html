@@ -137,57 +137,60 @@
 
         <div class="col-md-4 mb-3 mb-md-0">
             
-            <h5 class="mb-3">Decks with this card</h5>
-            
-            {% if card.cardmainboard_set.all %}
-                {% for cardmainboard in card.cardmainboard_set.all %}
-                    {% include 'mtg_decks/partials/small_deck_card.html' %}
+            {% if card.get_decks_containing.total > 0 %}
+                <h5 class="mb-3">Decks with this card ({{ card.get_decks_containing.total }})</h5>
+                
+                {% for cardmainboard in card.get_decks_containing.main %}
+                    <div class="card text-bg-light mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="{{ cardmainboard.mainboard.get_deck_art }}" class="img-fluid rounded-start">
+                            </div>
+                            <div class="col-md-8 d-flex align-items-center">
+                                <div class="card-body p-2">
+                                    <h5 class="card-title"><a href="" class="text-reset text-decoration-none">{{ cardmainboard.mainboard.name }}</a></h5>
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <div>
+                                            {% for color in cardmainboard.mainboard.get_colors %}
+                                                <i class="ms ms-cost ms-{{ color }}"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <p class="card-text text-secondary mb-0">
+                                            {{ cardmainboard.quantity }} in mainboard
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
-            {% endif %}
-            
-            {% comment %} {% if card.cardmainboard_set.all %}
-                <div class="list-group">
-                    <div class="list-group-item list-group-item-secondary">
-                        Decks with this card in the mainboard
-                    </div>
 
-                    {% for cardmainboard in card.cardmainboard_set.all %}
-                        <a class="list-group-item list-group-item-action" href="{% url 'deck' cardmainboard.mainboard.pk cardmainboard.mainboard.slug %}">
-                            <div class="d-flex w-100 justify-content-between">
-                                {{ cardmainboard.mainboard.name }}
-                                <div>
-                                    {% for color in cardmainboard.mainboard.get_colors %}
-                                        <i class="ms ms-cost ms-{{ color }}"></i>
-                                    {% endfor %}
+                {% for cardsideboard in card.get_decks_containing.side %}
+                    <div class="card text-bg-light mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="{{ cardsideboard.sideboard.get_deck_art }}" class="img-fluid rounded-start">
+                            </div>
+                            <div class="col-md-8 d-flex align-items-center">
+                                <div class="card-body p-2">
+                                    <h5 class="card-title"><a href="" class="text-reset text-decoration-none">{{ cardsideboard.sideboard.name }}</a></h5>
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <div>
+                                            {% for color in cardsideboard.sideboard.get_colors %}
+                                                <i class="ms ms-cost ms-{{ color }}"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <p class="card-text text-secondary mb-0">
+                                            {{ cardsideboard.quantity }} in sideboard
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                            <p class="text-secondary mb-1">{{cardmainboard.quantity }} in mainboard</p>
-                        </a>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            {% if card.cardsideboard_set.all %}
-                <div class="list-group mt-3">
-                    <div class="list-group-item list-group-item-secondary">
-                        Decks with this card in the sideboard
+                        </div>
                     </div>
-
-                    {% for cardsideboard in card.cardsideboard_set.all %}
-                        <a class="list-group-item list-group-item-action" href="{% url 'deck' cardsideboard.sideboard.pk cardsideboard.sideboard.slug %}">
-                            <div class="d-flex w-100 justify-content-between">
-                                {{ cardsideboard.sideboard.name }}
-                                <div>
-                                    {% for color in cardsideboard.sideboard.get_colors %}
-                                        <i class="ms ms-cost ms-{{ color }}"></i>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <p class="text-secondary mb-1">{{cardsideboard.quantity }} in sideboard</p>
-                        </a>
-                    {% endfor %}
-                </div>
-            {% endif %} {% endcomment %}
+                {% endfor %}
+                
+            {% endif %}
 
         </div>
 

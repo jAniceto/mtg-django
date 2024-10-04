@@ -290,6 +290,17 @@ class Card(models.Model):
         if 'Basic Land' in self.type_line:
             return True
         return False
+    
+    def get_decks_containing(self):
+        """Get cardmainboard and cardsideboard objects of decks containing this card."""
+        cardmainboards = self.cardmainboard_set.all()
+        already_identified_decks_pk_list = cardmainboards.values_list('mainboard__pk', flat=True)
+        cardsideboards = self.cardsideboard_set.exclude(sideboard__pk__in=already_identified_decks_pk_list)
+        return {
+            'main': cardmainboards,
+            'side': cardsideboards,
+            'total': cardmainboards.count() + cardsideboards.count()
+        }
 
 
 class BestPrice(models.Model):
