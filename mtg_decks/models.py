@@ -489,24 +489,26 @@ class Deck(models.Model):
     def get_deck_art(self):
         """Semi-randomly chooses a card image to use as deck art."""
         # Select only among cards with 4 copies in mainboard that are not Instant, Sorcery or Land
+        def choose_random_card(pool):
+            for _ in range(5):
+                card = random.choice(pool)
+                if card.art_url:
+                    return card.art_url
+
         card_pool = self.mainboard.filter(cardmainboard__quantity=4).exclude(type_line__icontains='Instant').exclude(type_line__icontains='Sorcery').exclude(type_line__icontains='Land')
         if card_pool:
-            card = random.choice(card_pool)
-            return card.art_url
+            return choose_random_card(card_pool)
         # If above fails choose among any card that has 4 copies in mainboard that is not Land
         card_pool = self.mainboard.filter(cardmainboard__quantity=4).exclude(type_line__icontains='Land')
         if card_pool:
-            card = random.choice(card_pool)
-            return card.art_url
+            return choose_random_card(card_pool)
         # If above fails, chose any card that is not Land
         card_pool = self.mainboard.exclude(type_line__icontains='Land')
         if card_pool:
-            card = random.choice(card_pool)
-            return card.art_url
+            return choose_random_card(card_pool)
         # If all above fail choose any card
         card_pool = self.mainboard.all()
-        card = random.choice(card_pool)
-        return card.art_url
+        return choose_random_card(card_pool)
 
 
 class CardMainboard(models.Model):
