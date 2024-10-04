@@ -26,6 +26,6 @@
 }
 
 .hover-image {
-    top: 0;
+    top: -175px;  /* Adjust to position the image to the top */
     left: 80%; /* Adjust to position the image to the right with some space */
 }
