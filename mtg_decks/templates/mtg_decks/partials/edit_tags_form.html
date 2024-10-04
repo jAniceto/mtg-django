@@ -5,17 +5,20 @@
     hx-post="{% url 'edit_deck_tags' deck.pk %}"
     hx-target="closest .deck-tags-list">
     <div class="row">
-        <div class="col">
+        <div class="col-md-10">
             {{ deck_tags_form.tags|add_class:"form-control" }}
         </div>
         
-        <div class="col-md-2 text-end align-self-end">
-            <button class="btn btn-outline-danger btn-sm w-100" type="button" 
-                hx-on:click="this.closest('.deck-tags-list').querySelector('.edit').style.display='inline-block'; this.closest('form').remove();">
-                Cancel
-            </button>
-            
-            <button class="btn btn-outline-primary btn-sm w-100 mt-2" type="submit">Update</button>
+        <div class="col-md-2 text-end align-self-center">
+            <div class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-outline-primary" type="submit">Update</button>
+                <button class="btn btn-outline-primary" type="button" 
+                    hx-on:click="this.closest('.deck-tags-list').querySelector('.edit').style.display='inline-block'; this.closest('form').remove();">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 </form>

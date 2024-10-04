@@ -25,6 +25,11 @@
     <!-- Plotly -->
     <script src="{% static 'mtg_decks/js/plotly-2.35.0.min.js' %}" charset="utf-8"></script>
 
+    <!-- JQuery and Select2 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
   </head>
   
   <body class="d-flex flex-column" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
