@@ -137,7 +137,15 @@
 
         <div class="col-md-4 mb-3 mb-md-0">
             
+            <h5 class="mb-3">Decks with this card</h5>
+            
             {% if card.cardmainboard_set.all %}
+                {% for cardmainboard in card.cardmainboard_set.all %}
+                    {% include 'mtg_decks/partials/small_deck_card.html' %}
+                {% endfor %}
+            {% endif %}
+            
+            {% comment %} {% if card.cardmainboard_set.all %}
                 <div class="list-group">
                     <div class="list-group-item list-group-item-secondary">
                         Decks with this card in the mainboard
@@ -179,7 +187,7 @@
                         </a>
                     {% endfor %}
                 </div>
-            {% endif %}
+            {% endif %} {% endcomment %}
 
         </div>
 

@@ -10,6 +10,7 @@ from django.conf import settings
 
 import requests
 import json
+import random
 
 from mtg_utils.mtg import color_families, mana_cost_html
 from mtg_utils import scryfall
@@ -473,6 +474,28 @@ class Deck(models.Model):
         )['sideboard_price']
         prices['total'] = prices['mainboard'] + prices['sideboard']
         return prices
+    
+    def get_deck_art(self):
+        """Semi-randomly chooses a card image to use as deck art."""
+        # Select only among cards with 4 copies in mainboard that are not Instant, Sorcery or Land
+        card_pool = self.mainboard.filter(cardmainboard__quantity=4).exclude(type_line__icontains='Instant').exclude(type_line__icontains='Sorcery').exclude(type_line__icontains='Land')
+        if card_pool:
+            card = random.choice(card_pool)
+            return card.art_url
+        # If above fails choose among any card that has 4 copies in mainboard that is not Land
+        card_pool = self.mainboard.filter(cardmainboard__quantity=4).exclude(type_line__icontains='Land')
+        if card_pool:
+            card = random.choice(card_pool)
+            return card.art_url
+        # If above fails, chose any card that is not Land
+        card_pool = self.mainboard.exclude(type_line__icontains='Land')
+        if card_pool:
+            card = random.choice(card_pool)
+            return card.art_url
+        # If all above fail choose any card
+        card_pool = self.mainboard.all()
+        card = random.choice(card_pool)
+        return card.art_url
 
 
 class CardMainboard(models.Model):
