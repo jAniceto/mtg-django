@@ -37,6 +37,7 @@ $ venv/Scripts/activate
 (venv) $ python manage.py add_cards -f data/cards.json
 (venv) $ python manage.py add_decks -f data/decks.json --max 40
 (venv) $ python manage.py add_tags
+(venv) $ python manage.py add_tags_to_decks
 (venv) $ python manage.py add_prices
 ```
 
@@ -78,6 +79,22 @@ Pass the `--del` option to delete all decks in the database whose name does not 
 ```
 (venv) $ python manage.py add_decks -f data/decks.json --del
 ```
+
+
+### Adding tags
+
+Create a initial set of deck tags.
+
+```
+(venv) $ python manage.py add_tags
+```
+
+Add tags to existing decks according to some rules.
+
+```
+(venv) $ python manage.py add_tags_to_decks
+```
+
 
 ### Updating card prices
 

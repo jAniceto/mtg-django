@@ -4,24 +4,17 @@ from mtg_decks.models import Tag
 
 # Deck tags
 TAGS = [
-    'combo',
-    'control',
-    'aggro',
-    'midrange',
-    'colorless',
-    'monocolor',
-    '2-color',
-    '3-color',
-    '4-color',
-    '5-color',
-    'graveyard',
-    'mill',
-    'tribal',
-    'blink',
-    'sacrifice',
-    'reanimator',
-    'spells',
-    'creatures',
+    '2-color', '3-color', '4-color', '5-color', 'affinity', 'aggro', 'ally', 'arcane', 
+    'artifacts', 'blink', 'cascade', 'changeling', 'cipher', 'colorless', 'combo', 
+    'competitive', 'control', 'convoke', 'counters', 'creatureless', 'creatures', 'crew', 
+    'cycling', 'deathtouch', 'defender', 'delve', 'discard', 'dredge', 'emerge', 'enchantments', 
+    'equipments', 'ETB', 'evolve', 'exalted', 'exert', 'extort', 'fog', 'gates', 'graveyard', 
+    'heroic', 'hexproof', 'infect', 'infinite', 'land destruction', 'landfall', 'lands', 
+    'lifegain', 'lock', 'madness', 'metalcraft', 'midrange', 'mill', 'mimic', 'monocolor', 
+    'morph', 'ninjutsu', 'persist', 'ping', 'prowess', 'ramp', 'reanimator', 'sacrifice', 
+    'soulshift', 'spells', 'synergy', 'voltron', 'tempo', 'threshold', 'tokens', 
+    'transformational', 'tribal', 'tron', 'undying', 'value', 'vehicles', 'wall', 
+    'white', 'wide',
 ]
 
 
@@ -33,7 +26,8 @@ class Command(BaseCommand):
         n_created = 0
         for tag_name in TAGS:
             tag, created = Tag.objects.get_or_create(name=tag_name)
-            n_created += 1
+            if created:
+                n_created += 1
 
         # Summarize
         self.stdout.write('Adding tags...')
