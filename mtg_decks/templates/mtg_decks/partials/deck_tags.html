@@ -13,13 +13,23 @@
     
     {% if user.is_authenticated %}
         <div class="col-1 text-end">
-            <button type="button" class="btn btn-outline-primary btn-sm edit"
-                hx-get="{% url 'edit_deck_tags' deck.pk %}" 
-                hx-target="next .edit-tags"
-                hx-swap="innerHTML"
-                hx-on::after-request="this.style.display='none'; $('#id_tags').select2();">
-                Edit
-            </button>
+            <div class="btn-group btn-group-sm" role="group">
+                <button type="button" class="btn btn-outline-primary btn-sm edit"
+                    hx-get="{% url 'edit_deck_tags' deck.pk %}" 
+                    hx-target="next .edit-tags"
+                    hx-swap="innerHTML"
+                    hx-on::after-request="this.closest('.btn-group').style.display='none'; $('#id_tags').select2();">
+                    Edit
+                </button>
+
+                <button type="button" class="btn btn-outline-primary btn-sm create-tag"
+                    hx-get="{% url 'create_tag' deck.pk %}" 
+                    hx-target="next .edit-tags"
+                    hx-swap="innerHTML"
+                    hx-on::after-request="this.closest('.btn-group').style.display='none';">
+                    New
+                </button>
+            </div>
         </div>
     {% endif %}
 </div>

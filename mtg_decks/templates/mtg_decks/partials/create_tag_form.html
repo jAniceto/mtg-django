@@ -2,16 +2,16 @@
 {% load widget_tweaks %}
 
 <form class="mt-2"
-    hx-post="{% url 'edit_deck_tags' deck.pk %}"
+    hx-post="{% url 'create_tag' deck.pk %}"
     hx-target="closest .deck-tags-list">
     <div class="row">
         <div class="col-md-10">
-            {{ deck_tags_form.tags|add_class:"form-control" }}
+            {{ create_tag_form.name|add_class:"form-control"|attr:"placeholder:Create new tag and add to this deck..." }}
         </div>
         
         <div class="col-md-2 text-end align-self-center">
             <div class="btn-group btn-group-sm" role="group">
-                <button class="btn btn-outline-primary" type="submit">Update</button>
+                <button class="btn btn-outline-primary" type="submit">Create</button>
                 <button class="btn btn-outline-primary" type="button" 
                     hx-on:click="this.closest('.deck-tags-list').querySelector('.btn-group').style.display='inline-flex'; this.closest('form').remove();">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">

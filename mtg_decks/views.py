@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Prefetch
 from mtg_decks.models import Deck, update_or_create_deck
-from mtg_decks.forms import DeckFilterForm, DecksJSONUploadForm, DeckTagsForm
+from mtg_decks.forms import DeckFilterForm, DecksJSONUploadForm, CreateTagForm, DeckTagsForm
 import json
 
 
@@ -71,6 +71,27 @@ def index(request):
     return render(request, 'mtg_decks/index.html', context)
 
 
+def create_tag(request, deck_pk):
+    """HTMX view. Adds a create tag form and handles tag creation."""
+    deck = get_object_or_404(Deck, pk=deck_pk)
+
+    if request.method == 'POST':
+        form = CreateTagForm(request.POST)
+        if form.is_valid():
+            tag = form.save()
+            deck.tags.add(tag)
+            context = {
+                'deck': deck,
+            }
+            return render(request, 'mtg_decks/partials/deck_tags.html', context)
+
+    context = {
+        'deck': deck,
+        'create_tag_form': CreateTagForm()
+    }
+    return render(request, 'mtg_decks/partials/create_tag_form.html', context)
+
+
 def edit_deck_tags(request, deck_pk):
     """HTMX view. Adds a edit tags form and handles tags update."""
     deck = get_object_or_404(Deck, pk=deck_pk)
@@ -130,6 +151,10 @@ def deck(request, pk, slug):
     }
     return render(request, 'mtg_decks/deck.html', context)
 
+
+#######################################################################
+# Management views
+#######################################################################
 
 @login_required
 def management(request):

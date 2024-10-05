@@ -39,6 +39,13 @@ class DecksJSONUploadForm(forms.Form):
         return file
 
 
+class CreateTagForm(forms.ModelForm):
+    """Form to create new tags."""
+    class Meta:
+        model = Tag
+        fields = ('name',)
+        
+
 class DeckTagsForm(forms.ModelForm):
     """Deck model form to update deck tags."""
     class Meta:
