@@ -71,6 +71,50 @@ def index(request):
     return render(request, 'mtg_decks/index.html', context)
 
 
+def deck_index(request):
+    """Table containing all decks."""
+    decks = Deck.objects.all()
+    context = {
+        'decks': decks,
+    }
+    return render(request, 'mtg_decks/deck-index.html', context)
+
+
+def deck(request, pk, slug):
+    """Deck detail page."""
+    # Check if deck exists, otherwise return 404 error
+    deck = get_object_or_404(Deck, pk=pk)
+    context = {
+        'decklist_view': settings.DECKLIST_DISPLAY,
+        'new_badge_limit_days': settings.NEW_BADGE_LIMIT_DAYS,
+        'deck': deck,
+    }
+    return render(request, 'mtg_decks/deck.html', context)
+
+
+def download_deck_txt(request, deck_pk):
+    """Download a decklist in .txt."""
+    deck = get_object_or_404(Deck, pk=deck_pk)
+
+    filename = deck.name.replace(' ', '-')
+    text_decklist = deck.to_string()
+
+    response = HttpResponse(text_decklist, content_type='application/text charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="{filename}.txt"'
+    return response
+
+
+def copy_decklist(request, deck_pk):
+    """Download a decklist in .txt."""
+    deck = get_object_or_404(Deck, pk=deck_pk)
+    text_decklist = deck.to_string()
+    return HttpResponse(text_decklist)
+
+
+#######################################################################
+# Views for logged in users only (to edit info)
+#######################################################################
+
 def create_tag(request, deck_pk):
     """HTMX view. Adds a create tag form and handles tag creation."""
     deck = get_object_or_404(Deck, pk=deck_pk)
@@ -110,46 +154,6 @@ def edit_deck_tags(request, deck_pk):
         'deck_tags_form': DeckTagsForm(instance=deck)
     }
     return render(request, 'mtg_decks/partials/edit_tags_form.html', context)
-
-
-def download_deck_txt(request, deck_pk):
-    """Download a decklist in .txt."""
-    deck = get_object_or_404(Deck, pk=deck_pk)
-
-    filename = deck.name.replace(' ', '-')
-    text_decklist = deck.to_string()
-
-    response = HttpResponse(text_decklist, content_type='application/text charset=utf-8')
-    response['Content-Disposition'] = f'attachment; filename="{filename}.txt"'
-    return response
-
-
-def copy_decklist(request, deck_pk):
-    """Download a decklist in .txt."""
-    deck = get_object_or_404(Deck, pk=deck_pk)
-    text_decklist = deck.to_string()
-    return HttpResponse(text_decklist)
-
-
-def deck_index(request):
-    """Table containing all decks."""
-    decks = Deck.objects.all()
-    context = {
-        'decks': decks,
-    }
-    return render(request, 'mtg_decks/deck-index.html', context)
-
-
-def deck(request, pk, slug):
-    """Deck detail page."""
-    # Check if deck exists, otherwise return 404 error
-    deck = get_object_or_404(Deck, pk=pk)
-    context = {
-        'decklist_view': settings.DECKLIST_DISPLAY,
-        'new_badge_limit_days': settings.NEW_BADGE_LIMIT_DAYS,
-        'deck': deck,
-    }
-    return render(request, 'mtg_decks/deck.html', context)
 
 
 #######################################################################
