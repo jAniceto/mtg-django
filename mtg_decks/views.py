@@ -59,7 +59,6 @@ def index(request):
     decks_page = paginator.get_page(page_number)
 
     context = {
-        'decklist_view': settings.DECKLIST_DISPLAY,
         'new_badge_limit_days': settings.NEW_BADGE_LIMIT_DAYS,
         'decks': decks_page,
         'form': DeckFilterForm(),
@@ -85,7 +84,6 @@ def deck(request, pk, slug):
     # Check if deck exists, otherwise return 404 error
     deck = get_object_or_404(Deck, pk=pk)
     context = {
-        'decklist_view': settings.DECKLIST_DISPLAY,
         'new_badge_limit_days': settings.NEW_BADGE_LIMIT_DAYS,
         'deck': deck,
     }

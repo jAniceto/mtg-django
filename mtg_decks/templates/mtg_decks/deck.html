@@ -32,15 +32,9 @@
             </div>
         </div>
 
-        <!-- Card body - decklist (there are several options on how to display the decklist) -->
+        <!-- Card body - decklist -->
         <div class="card-body">
-
-            {% if decklist_view == 'by_type' %}
-                {% include 'mtg_decks/partials/decklist_by_type.html' %}
-            {% else %}
-                {% include 'mtg_decks/partials/decklist.html' %}
-            {% endif %}
-
+            {% include 'mtg_decks/partials/decklist_by_type.html' %}
         </div>
         
         <!-- Card footer - tags -->

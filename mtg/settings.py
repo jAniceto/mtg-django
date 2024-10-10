@@ -166,12 +166,9 @@ INTERNAL_IPS = [
 # WEBSITE DISPLAY OPTIONS
 
 # Number of decks per page on homepage.
-DECKS_PER_PAGE = 4
+DECKS_PER_PAGE = 8
 
-# How to present the decklist. Options are '' or 'by_type'
-DECKLIST_DISPLAY = 'by_type'
-
-# Margin to apply when spliting decklist over 2 columns. Applies when DECKLIST_DISPLAY = 'by_type'.
+# Margin to apply when spliting decklist over 2 columns.
 # Higher value places more cards in the second column. Recommended between -2 and 2.
 DECKLIST_COL_SPLIT_MARGIN = -2
 
