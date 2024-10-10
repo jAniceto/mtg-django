@@ -87,7 +87,7 @@ def deck(request, pk, slug):
         'new_badge_limit_days': settings.NEW_BADGE_LIMIT_DAYS,
         'deck': deck,
     }
-    return render(request, 'mtg_decks/deck.html', context)
+    return render(request, 'mtg_decks/deck-detail.html', context)
 
 
 def download_deck_txt(request, deck_pk):
