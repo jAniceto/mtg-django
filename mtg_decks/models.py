@@ -333,6 +333,7 @@ class Deck(models.Model):
 
     name = models.CharField(max_length=50)
     slug = models.SlugField()
+    art_url = models.URLField(blank=True)
     FORMAT_CHOICES = (
         ('Standard', 'Standard'),
         ('Historic', 'Historic'),
@@ -373,10 +374,18 @@ class Deck(models.Model):
         return f'{self.name}'
 
     def save(self, *args, **kwargs):
-        """Override save method to automatically create a slug for every new object"""
+        """Override save method to:
+         - automatically create a slug for every new object
+         - chose a card image art to use as deck art
+        """
+        # For newly created object, set slug
         if not self.id:
-            # Newly created object, so set slug
             self.slug = slugify(self.name)
+
+        # Choose a deck cover image
+        self.art_url = self.get_deck_art()
+
+        # Call the original save method
         super(Deck, self).save(*args, **kwargs)
 
     def get_categorized_mainboard(self):
@@ -497,18 +506,26 @@ class Deck(models.Model):
 
         card_pool = self.mainboard.filter(cardmainboard__quantity=4).exclude(type_line__icontains='Instant').exclude(type_line__icontains='Sorcery').exclude(type_line__icontains='Land')
         if card_pool:
-            return choose_random_card(card_pool)
+            selected_card = choose_random_card(card_pool)
+            if selected_card:
+                return selected_card
         # If above fails choose among any card that has 4 copies in mainboard that is not Land
         card_pool = self.mainboard.filter(cardmainboard__quantity=4).exclude(type_line__icontains='Land')
         if card_pool:
-            return choose_random_card(card_pool)
+            selected_card = choose_random_card(card_pool)
+            if selected_card:
+                return selected_card
         # If above fails, chose any card that is not Land
         card_pool = self.mainboard.exclude(type_line__icontains='Land')
         if card_pool:
-            return choose_random_card(card_pool)
+            selected_card = choose_random_card(card_pool)
+            if selected_card:
+                return selected_card
         # If all above fail choose any card
         card_pool = self.mainboard.all()
-        return choose_random_card(card_pool)
+        selected_card = choose_random_card(card_pool)
+        if selected_card:
+            return selected_card
 
 
 class CardMainboard(models.Model):
