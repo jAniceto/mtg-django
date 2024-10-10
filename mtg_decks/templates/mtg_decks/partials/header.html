@@ -2,7 +2,7 @@
     
     <div class="container">
         <a class="navbar-brand" href="{% url 'index' %}"> The Pauper Deck Library</a>
-        &nbsp; <span class="fs-6 fw-lighter text-secondary text-opacity-50">by Synergix</span>
+        <span class="fs-6 fw-lighter text-secondary text-opacity-50 d-none d-md-inline-block">by Synergix</span>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,16 +17,10 @@
                 <a class="nav-link" href="{% url 'deck_index' %}">Decks</a>
 
                 {% if user.is_authenticated %}
-                <div class="vr mx-3 text-dark"></div>
+                    <div class="vr mx-3 text-dark d-none d-md-block"></div>
+                    <div class="text-dark d-md-none"><hr></div>
 
-                <a class="nav-link" href="{% url 'management' %}">Management</a>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="">Logout</a>
-                </li> -->
-                {% else %}
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="">Login</a>
-                </li> -->
+                    <a class="nav-link" href="{% url 'management' %}">Management</a>
                 {% endif %}
 
             </ul>

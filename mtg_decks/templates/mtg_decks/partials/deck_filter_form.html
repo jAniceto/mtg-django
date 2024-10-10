@@ -17,7 +17,7 @@
             {{ form.family|add_class:"form-select" }}
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 mt-3 mt-md-0">
             <label for="{{ form.card.id_for_label }}" class="form-label">By card in mainboard</label>
             {{ form.card|add_class:"form-control"|attr:"list:pauper-card-names"|attr:"autocomplete:off" }}
             <datalist id="pauper-card-names"></datalist>
@@ -27,7 +27,7 @@
             <datalist id="pauper-card_sb-names"></datalist>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 mt-3 mt-md-0">
             <label for="{{ form.tag.id_for_label }}" class="form-label">By tag</label>
             {{ form.tag|add_class:"form-select" }}
 
@@ -42,7 +42,6 @@
                     </div>
                 {% endfor %}
             </div>
-
         </div>
     </div>
 
@@ -54,7 +53,7 @@
             </button>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-2 mt-1 mt-md-0">
             <a href="{% url 'index' %}" type="button" class="btn btn-outline-primary w-100">Reset</a>
         </div>
     </div>
