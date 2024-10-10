@@ -148,7 +148,11 @@
                             </div>
                             <div class="col-md-8 d-flex align-items-center">
                                 <div class="card-body p-2">
-                                    <h5 class="card-title"><a href="" class="text-reset text-decoration-none">{{ cardmainboard.mainboard.name }}</a></h5>
+                                    <h5 class="card-title">
+                                        <a href="{% url 'deck' cardmainboard.mainboard.pk cardmainboard.mainboard.slug %}" class="text-reset text-decoration-none stretched-link">
+                                            {{ cardmainboard.mainboard.name }}
+                                        </a>
+                                    </h5>
                                     <div class="d-flex w-100 justify-content-between">
                                         <div>
                                             {% for color in cardmainboard.mainboard.get_colors %}
@@ -156,7 +160,7 @@
                                             {% endfor %}
                                         </div>
                                         <p class="card-text text-secondary mb-0">
-                                            {{ cardmainboard.quantity }} in mainboard
+                                            {{ cardmainboard.mainboard.get_price.total|floatformat:2 }} tix
                                         </p>
                                     </div>
                                 </div>
