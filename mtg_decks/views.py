@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Q, F, ExpressionWrapper, FloatField, Count
+from django.db.models import Q, Count
 from mtg_decks.models import Deck, Card, update_or_create_deck
 from mtg_decks.forms import DeckFilterForm, DecksJSONUploadForm, CreateTagForm, DeckTagsForm
 from mtg_decks.charts import plot_deck_family_distribution, plot_deck_color_distribution
@@ -112,7 +112,7 @@ def copy_decklist(request, deck_pk):
 
 def stats(request):
     """Collection statistics page."""
-    cards = Card.objects.all()
+    cards = Card.objects.prefetch_related('best_price').all()
     decks = Deck.objects.all()
 
     # Number of decks
