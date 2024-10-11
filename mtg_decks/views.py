@@ -5,8 +5,8 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Prefetch
-from mtg_decks.models import Deck, update_or_create_deck
+from django.db.models import Q
+from mtg_decks.models import Deck, Card, CardMainboard, CardSideboard, update_or_create_deck
 from mtg_decks.forms import DeckFilterForm, DecksJSONUploadForm, CreateTagForm, DeckTagsForm
 import json
 
@@ -107,6 +107,26 @@ def copy_decklist(request, deck_pk):
     deck = get_object_or_404(Deck, pk=deck_pk)
     text_decklist = deck.to_string()
     return HttpResponse(text_decklist)
+
+
+def stats(request):
+    """Collection statistics page."""
+    cards = Card.objects.all()
+    decks = Deck.objects.all()
+
+    # Average price of decks
+    deck_prices_list = [d.get_price()['total'] for d in decks]
+    deck_avg_tix = sum(deck_prices_list) / len(deck_prices_list)
+
+    # Unique card counts
+    n_unique_cards = cards.filter(Q(cardmainboard__isnull=False) | Q(cardsideboard__isnull=False)).distinct().count()
+
+    context = {
+        'n_decks': decks.count(),
+        'deck_avg_tix': deck_avg_tix,
+        'n_unique_cards': n_unique_cards,
+    }
+    return render(request, 'mtg_decks/stats.html', context)
 
 
 #######################################################################

@@ -4,8 +4,9 @@ from mtg_decks import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('deck-index', views.deck_index, name='deck_index'),
+    path('deck-index/', views.deck_index, name='deck_index'),
     path('deck/<int:pk>-<str:slug>/', views.deck, name='deck'),
+    path('stats/', views.stats, name='stats'),
     path('download-deck-txt/<int:deck_pk>/', views.download_deck_txt, name='download_deck_txt'),
     path('management/', views.management, name='management'),
     # HTMX views
