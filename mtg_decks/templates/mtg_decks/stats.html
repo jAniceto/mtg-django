@@ -79,7 +79,7 @@
 
     </div>
 
-    
+
     <!-- Charts -->
     <div class="row mt-5">
         <div class="col-md-6">
@@ -94,7 +94,37 @@
     </div>
 
 
-    <div class="mb-5"></div>
+    <!-- Charts -->
+    <div class="row my-5">
+        <div class="col">
+            
+            <h2>Card usage</h2>
+
+            <div>
+                <table class="table table-hover table-sm table-responsive">
+                    <thead>
+                      <tr>
+                        <th scope="col">Card name</th>
+                        <th scope="col">Mainboards</th>
+                        <th scope="col">Sideboards</th>
+                        <th scope="col">Price (tix)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for card in cards %}
+                            <tr>
+                                <td><a href="{% url 'card_detail' card.pk %}">{{ card.name }}</a></td>
+                                <td>{{ card.count_mb }}</td>
+                                <td>{{ card.count_sb }}</td>
+                                <td>{{ card.best_price.tix|floatformat:3 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+            </div>
+
+        </div>
+    </div>
 
 </div>
 

@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, F, ExpressionWrapper, FloatField, Count
 from mtg_decks.models import Deck, Card, update_or_create_deck
 from mtg_decks.forms import DeckFilterForm, DecksJSONUploadForm, CreateTagForm, DeckTagsForm
 from mtg_decks.charts import plot_deck_family_distribution, plot_deck_color_distribution
@@ -115,12 +115,16 @@ def stats(request):
     cards = Card.objects.all()
     decks = Deck.objects.all()
 
+    # Number of decks
+    n_decks = decks.count()
+
     # Average price of decks
     deck_prices_list = [d.get_price()['total'] for d in decks]
     deck_avg_tix = sum(deck_prices_list) / len(deck_prices_list)
 
     # Unique card counts
-    n_unique_cards = cards.filter(Q(cardmainboard__isnull=False) | Q(cardsideboard__isnull=False)).distinct().count()
+    cards = cards.filter(Q(cardmainboard__isnull=False) | Q(cardsideboard__isnull=False)).distinct()
+    n_unique_cards = cards.count()
 
     # Color chart
     fig = plot_deck_color_distribution(decks)
@@ -130,12 +134,18 @@ def stats(request):
     fig = plot_deck_family_distribution(decks)
     family_chart = fig.to_html(full_html=False, config={'displayModeBar': False})
 
+    # Card info
+    cards = cards.annotate(
+        count_mb=Count('mainboards', distinct=True), count_sb=Count('sideboards', distinct=True)
+    ).order_by('-count_mb', '-count_sb')[:50]
+    
     context = {
-        'n_decks': decks.count(),
+        'n_decks': n_decks,
         'deck_avg_tix': deck_avg_tix,
         'n_unique_cards': n_unique_cards,
         'family_chart': family_chart,
         'color_chart': color_chart,
+        'cards': cards,
     }
     return render(request, 'mtg_decks/stats.html', context)
 
