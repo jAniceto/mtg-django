@@ -6,6 +6,7 @@
 
 <div class="container">
 
+    <!-- Metrics -->
     <div class="row mt-5">
         <div class="col">
             
@@ -77,6 +78,23 @@
         </div>
 
     </div>
+
+    
+    <!-- Charts -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <h2>Deck color distribution</h2>
+            {{ color_chart|safe }}
+        </div>
+
+        <div class="col-md-6">
+            <h2>Deck family distribution</h2>
+            {{ family_chart|safe }}
+        </div>
+    </div>
+
+
+    <div class="mb-5"></div>
 
 </div>
 

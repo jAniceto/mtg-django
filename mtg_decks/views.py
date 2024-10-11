@@ -6,8 +6,9 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
-from mtg_decks.models import Deck, Card, CardMainboard, CardSideboard, update_or_create_deck
+from mtg_decks.models import Deck, Card, update_or_create_deck
 from mtg_decks.forms import DeckFilterForm, DecksJSONUploadForm, CreateTagForm, DeckTagsForm
+from mtg_decks.charts import plot_deck_family_distribution, plot_deck_color_distribution
 import json
 
 
@@ -121,10 +122,20 @@ def stats(request):
     # Unique card counts
     n_unique_cards = cards.filter(Q(cardmainboard__isnull=False) | Q(cardsideboard__isnull=False)).distinct().count()
 
+    # Color chart
+    fig = plot_deck_color_distribution(decks)
+    color_chart = fig.to_html(full_html=False, config={'displayModeBar': False})
+
+    # Family chart
+    fig = plot_deck_family_distribution(decks)
+    family_chart = fig.to_html(full_html=False, config={'displayModeBar': False})
+
     context = {
         'n_decks': decks.count(),
         'deck_avg_tix': deck_avg_tix,
         'n_unique_cards': n_unique_cards,
+        'family_chart': family_chart,
+        'color_chart': color_chart,
     }
     return render(request, 'mtg_decks/stats.html', context)
 

@@ -12,9 +12,9 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
 
-                <a class="nav-link" href="#">About</a>
                 <a class="nav-link" href="{% url 'cards_home' %}">Cards</a>
                 <a class="nav-link" href="{% url 'deck_index' %}">Decks</a>
+                <a class="nav-link" href="{% url 'stats' %}">Stats</a>
 
                 {% if user.is_authenticated %}
                     <div class="vr mx-3 text-dark d-none d-md-block"></div>
