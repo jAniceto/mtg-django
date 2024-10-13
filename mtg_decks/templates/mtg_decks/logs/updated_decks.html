@@ -1,0 +1,65 @@
+<div class="row">
+    <div class="col">
+        <p>Deleated decks:</p>
+
+        <ul class="list-group list-group-flush">
+            {% if deleted_decks %}
+                {% for deck in deleted_decks %}
+                    <li class="list-group-item">{{ deck }}</li>
+                {% endfor %}
+                
+            {% else %}
+                <li class="list-group-item">None</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    
+    <div class="col">
+        <p>Created decks:</p>
+
+        <ul class="list-group list-group-flush">
+            {% if created_decks %}
+                {% for deck in created_decks %}
+                    <li class="list-group-item">{{ deck }}</li>
+                {% endfor %}
+                
+            {% else %}
+                <li class="list-group-item">None</li>
+            {% endif %}
+        </ul>
+    </div>
+
+
+    <div class="col">
+        <p>Updated decks:</p>
+
+        <ul class="list-group list-group-flush">
+            {% if updated_decks %}
+                {% for deck in updated_decks %}
+                    <li class="list-group-item">{{ deck }}</li>
+                {% endfor %}
+                
+            {% else %}
+                <li class="list-group-item">None</li>
+            {% endif %}
+        </ul>
+    </div>
+
+
+    <div class="col">
+        <p>Found error(s) in the following decks:</p>
+
+        <ul class="list-group list-group-flush">
+            {% if err_decks %}
+                {% for deck in err_decks %}
+                    <li class="list-group-item">{{ deck }}</li>
+                {% endfor %}
+                
+            {% else %}
+                <li class="list-group-item">None</li>
+            {% endif %}
+        </ul>
+    </div>
+    
+</div>

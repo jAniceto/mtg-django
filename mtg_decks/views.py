@@ -214,10 +214,24 @@ def process_deck_json(request):
 
     if form.is_valid() and request.htmx:
         file = request.FILES['file']
+        delete_other_decks = request.POST['delete_others']
+
         try:
             # Parse the JSON file
             decks_data = json.load(file)
 
+            # Delete decks not in file
+            if delete_other_decks:
+                deck_names_in_data = [d['name'] for d in decks_data]  # list of deck names in the data
+                deck_objs = Deck.objects.all()
+
+                deleted_decks = []
+                for deck_obj in deck_objs:
+                    if deck_obj.name not in deck_names_in_data:
+                        deleted_decks.append(deck_obj.name)
+                        deck_obj.delete()
+
+            # Create or update decks
             created_decks = []
             updated_decks = []
             err_decks = []
@@ -233,12 +247,12 @@ def process_deck_json(request):
                     updated_decks.append(deck.name)
 
             context = {
+                'deleted_decks': deleted_decks,
                 'created_decks': created_decks,
                 'updated_decks': updated_decks,
                 'err_decks': err_decks,
             }
-            # return HttpResponse('Decks update compleated!')
-            return render(request, 'mtg_decks/partials/log_updated_decks.html', context)
+            return render(request, 'mtg_decks/logs/updated_decks.html', context)
 
         except:
             return HttpResponse('Failed')

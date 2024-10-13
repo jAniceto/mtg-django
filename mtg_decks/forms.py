@@ -31,6 +31,7 @@ class DeckFilterForm(forms.Form):
 class DecksJSONUploadForm(forms.Form):
     """Form to upload list of decks as JSON file."""
     file = forms.FileField(label='Select a JSON file')
+    delete_others = forms.BooleanField(initial=False)
 
     def clean_file(self):
         file = self.cleaned_data.get('file')
