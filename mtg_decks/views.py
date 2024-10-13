@@ -10,6 +10,7 @@ from mtg_decks.models import Deck, Card, update_or_create_deck
 from mtg_decks.forms import DeckFilterForm, DecksJSONUploadForm, CreateTagForm, DeckTagsForm
 from mtg_decks.charts import plot_deck_family_distribution, plot_deck_color_distribution
 import json
+from io import StringIO
 
 
 def index(request):
@@ -210,6 +211,11 @@ def management(request):
 
 
 def process_deck_json(request):
+    """HTMX view to update decks in DB.
+    - Parses a JSON file
+    - Info needed, deletes decks in the DB that are not in the new JSON file
+    - Creates or updates decks.
+    """
     form = DecksJSONUploadForm(request.POST, request.FILES)
 
     if form.is_valid() and request.htmx:
@@ -259,5 +265,8 @@ def process_deck_json(request):
 
 
 def update_card_prices(request):
-    call_command('add_prices')
-    return HttpResponse('Done!')
+    """HTMX view to run update prices management command."""
+    content = StringIO()
+    call_command('add_prices', stdout=content)
+    content.seek(0)
+    return HttpResponse(content.read())
