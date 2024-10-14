@@ -4,7 +4,8 @@ from mtg_decks import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('deck-index/', views.deck_index, name='deck_index'),
+    path('decks-table/', views.decks_table, name='decks_table'),
+    path('decks-list/', views.decks_list, name='decks_list'),
     path('deck/<int:pk>-<str:slug>/', views.deck, name='deck'),
     path('random/', views.deck_random, name='deck_random'),
     path('stats/', views.stats, name='stats'),

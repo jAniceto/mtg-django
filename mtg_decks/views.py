@@ -73,13 +73,22 @@ def index(request):
     return render(request, 'mtg_decks/decks-cards.html', context)
 
 
-def deck_index(request):
+def decks_table(request):
     """Table containing all decks."""
     decks = Deck.objects.all()
     context = {
         'decks': decks,
     }
     return render(request, 'mtg_decks/decks-table.html', context)
+
+
+def decks_list(request):
+    """List of deck cards containing all decks."""
+    decks = Deck.objects.all()
+    context = {
+        'decks': decks,
+    }
+    return render(request, 'mtg_decks/decks-cards-small.html', context)
 
 
 def deck(request, pk, slug):

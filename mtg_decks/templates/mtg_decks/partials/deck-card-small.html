@@ -1,0 +1,26 @@
+<div class="card text-bg-light mb-3 small-deck-card">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="{{ deck.art_url }}" class="img-fluid rounded-start">
+        </div>
+        <div class="col-md-8 d-flex align-items-center">
+            <div class="card-body p-2">
+                <h5 class="card-title">
+                    <a href="{% url 'deck' deck.pk deck.slug %}" class="text-reset text-decoration-none stretched-link">
+                        {{ deck.name }}
+                    </a>
+                </h5>
+                <div class="d-flex w-100 justify-content-between">
+                    <div>
+                        {% for color in deck.get_colors %}
+                            <i class="ms ms-cost ms-{{ color }}"></i>
+                        {% endfor %}
+                    </div>
+                    <p class="card-text text-secondary mb-0">
+                        {{ deck.get_price.total|floatformat:2 }} tix
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

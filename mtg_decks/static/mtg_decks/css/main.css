@@ -29,3 +29,8 @@
     top: -175px;  /* Adjust to position the image to the top */
     left: 80%; /* Adjust to position the image to the right with some space */
 }
+
+/* Hover effect for small deck card */
+.small-deck-card:hover {
+    border-color: #2c3e50 !important;
+}
