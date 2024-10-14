@@ -69,7 +69,7 @@ def index(request):
         # Render partial (new page of decks)
         return render(request, 'mtg_decks/partials/decks.html', context)
     # Otherwise, render the full page on the first load
-    return render(request, 'mtg_decks/index.html', context)
+    return render(request, 'mtg_decks/decks-cards.html', context)
 
 
 def deck_index(request):
@@ -78,7 +78,7 @@ def deck_index(request):
     context = {
         'decks': decks,
     }
-    return render(request, 'mtg_decks/deck-index.html', context)
+    return render(request, 'mtg_decks/decks-table.html', context)
 
 
 def deck(request, pk, slug):

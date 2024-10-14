@@ -1,42 +1,7 @@
 {% for deck in decks %}
 
-    <div class="card mt-5">
-
-        <!-- Card header - deck name -->
-        <div class="card-header position-relative">
-            <div class="row">
-                <div class="col-md-8">
-                    <h1 class="mb-0">
-                        <a href="{% url 'deck' deck.pk deck.slug %}" class="text-decoration-none text-reset stretched-link">{{ deck.name }}</a>
-
-                        {% if deck.get_days_since_created < new_badge_limit_days %}
-                            <span class="badge text-bg-success align-middle fs-6">New</span>
-                        {% elif deck.get_days_since_updated < new_badge_limit_days %}
-                            <span class="badge text-bg-info align-middle fs-6">Updated</span>
-                        {% endif %}
-                    </h1>
-                </div>
-                <div class="col-md-4 d-none d-lg-block">
-                    <h2 class="text-end mb-0">
-                        {% for color in deck.get_colors %}
-                        <i class="ms ms-cost ms-{{ color }}"></i>
-                        {% endfor %}
-                    </h2>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card body - decklist -->
-        <div class="card-body">
-            {% include 'mtg_decks/partials/decklist_by_type.html' %}
-        </div>
-        
-        <!-- Card footer - tags -->
-        <div class="card-footer text-body-secondary deck-tags-list">
-            {% include "mtg_decks/partials/deck_tags.html" %}
-        </div>
-
-    </div>
+    <!-- Large card representing a deck -->
+    {% include 'mtg_decks/partials/deck-card.html' %}
 
     <!-- Handle infinite scroll -->
     {% if decks.has_next and forloop.last %}
@@ -50,6 +15,5 @@
     {% else %}
         <div class="mt-5"></div>
     {% endif %}
-
 
 {% endfor %}
