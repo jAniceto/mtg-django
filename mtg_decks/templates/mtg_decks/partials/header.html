@@ -13,7 +13,20 @@
             <ul class="navbar-nav ms-auto">
 
                 <a class="nav-link" href="{% url 'cards_home' %}">Cards</a>
-                <a class="nav-link" href="{% url 'deck_index' %}">Decks</a>
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Decks
+                    </a>
+                    <div class="dropdown-menu text-bg-primary">
+                      <div><a class="nav-link" href="{% url 'index' %}">Decklist view</a></div>
+                      <div><a class="nav-link" href="{% url 'deck_index' %}">Table view</a></div>
+                      <div><hr class="dropdown-divider"></div>
+                      <div><a class="nav-link" href="{% url 'deck_random' %}">Randomize</a></div>
+                    </div>
+                </li>
+          
+
                 <a class="nav-link" href="{% url 'stats' %}">Stats</a>
 
                 {% if user.is_authenticated %}
