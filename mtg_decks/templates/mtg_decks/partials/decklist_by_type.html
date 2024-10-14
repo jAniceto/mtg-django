@@ -1,160 +1,84 @@
-<div class="row">
-    <!-- Decklist (first column)-->
-    <div class="col-md-4">
-        <table style="width:100%">
-            {% for type, mainboard_items in deck.get_categorized_mainboard.items %}
-                {% if mainboard_items %}
+<!-- Decklist (first column)-->
+<div class="col-md-4">
+    <table style="width:100%">
+        {% for type, mainboard_items in deck.get_categorized_mainboard.items %}
+            {% if mainboard_items %}
+                <tr>
+                    <td colspan="3">
+                        <i class="ms ms-{{ type }}"></i>
+                        <span class="fw-semibold">{{ type|title }}</span>
+                    </td>
+                </tr>
+
+                {% for mainboard_item in mainboard_items %}
                     <tr>
-                        <td colspan="3">
-                            <i class="ms ms-{{ type }}"></i>
-                            <span class="fw-semibold">{{ type|title }}</span>
-                        </td>
-                    </tr>
-
-                    {% for mainboard_item in mainboard_items %}
-                        <tr>
-                            <td>{{ mainboard_item.quantity }}</td>
-                            <td>
-                                <div class="position-relative">
-                                    <a href="{% url 'card_detail' mainboard_item.card.pk %}" class="link-body-emphasis text-decoration-none hover-link" data-image-url="{{ mainboard_item.card.img_url }}">
-                                        {{ mainboard_item.card.name }}
-                                    </a>
-                                    <div class="hover-image">
-                                        <!-- Card image is created here when link above is hovered -->
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-end">{{ mainboard_item.card.get_mana_cost_html|safe }}</td>
-                            <td class="text-end">
-                                {% if not mainboard_item.card.is_basic_land %}
-                                    {% if mainboard_item.card.best_price.tix < 0.004 %}
-                                        <.01
-                                    {% else %}
-                                        {{ mainboard_item.card.best_price.tix|floatformat:2 }}
-                                    {% endif %}
-                                {% endif %}
-                            </td>
-                        </tr>
-
-                    {% endfor %}
-                
-                {% endif %}
-
-    <!-- Break first column and continue in the second column -->
-    {% if type == deck.get_categorized_mainboard_split_type %}
-        </table>
-    </div>
-    <div class="col-md-4">
-        <table style="width:100%">
-            {% endif %}
-                <!-- forloop continues placing stuff here -->
-            {% endfor %}
-        </table>
-
-        <!-- Sideboard (always in a new table in the second column) -->
-        {% if deck.cardsideboard_set.all %}
-            <h5 class="mt-3">Sideboard</h5>
-            <table style="width:100%">
-                {% for sideboard_item in deck.cardsideboard_set.all %}
-                    <tr>
-                        <td>{{ sideboard_item.quantity }}</td>
+                        <td>{{ mainboard_item.quantity }}</td>
                         <td>
                             <div class="position-relative">
-                                <a href="{% url 'card_detail' sideboard_item.card.pk %}" class="link-body-emphasis text-decoration-none hover-link" data-image-url="{{ sideboard_item.card.img_url }}">
-                                    {{ sideboard_item.card.name }}
+                                <a href="{% url 'card_detail' mainboard_item.card.pk %}" class="link-body-emphasis text-decoration-none hover-link" data-image-url="{{ mainboard_item.card.img_url }}">
+                                    {{ mainboard_item.card.name }}
                                 </a>
                                 <div class="hover-image">
                                     <!-- Card image is created here when link above is hovered -->
                                 </div>
                             </div>
                         </td>
-                        <td class="text-end">{{ sideboard_item.card.get_mana_cost_html|safe }}</td>
+                        <td class="text-end">{{ mainboard_item.card.get_mana_cost_html|safe }}</td>
                         <td class="text-end">
-                            {% if not sideboard_item.card.is_basic_land %}
-                                {% if sideboard_item.card.best_price.tix < 0.004 %}
+                            {% if not mainboard_item.card.is_basic_land %}
+                                {% if mainboard_item.card.best_price.tix < 0.004 %}
                                     <.01
                                 {% else %}
-                                    {{ sideboard_item.card.best_price.tix|floatformat:2 }}
+                                    {{ mainboard_item.card.best_price.tix|floatformat:2 }}
                                 {% endif %}
                             {% endif %}
                         </td>
                     </tr>
+
                 {% endfor %}
-            </table>
-        {% endif %}
-    </div>
             
+            {% endif %}
 
-    <!-- Analysis and actions -->
-    <div class="col-md-4 mt-3 mt-md-0">
-        <!-- CMC plot -->
-        <div class="mb-4">
-            {{ deck.cmc_chart|safe }}
-        </div>
+<!-- Break first column and continue in the second column -->
+{% if type == deck.get_categorized_mainboard_split_type %}
+    </table>
+</div>
+<div class="col-md-4">
+    <table style="width:100%">
+        {% endif %}
+            <!-- forloop continues placing stuff here -->
+        {% endfor %}
+    </table>
 
-        <!-- Info and actions -->
-        <div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Created
-                    <span>{{ deck.created_at|date:"Y/m/d" }}</span>
-                </li>
-
-                <li class="list-group-item d-flex justify-content-between align-items-center data-bs-toggle="tooltip" data-bs-title="Created {{ deck.created_at|date:"Y/m/d" }}"">
-                    Last updated
-                    <span>{{ deck.updated_at|date:"Y/m/d" }}</span>
-                </li>
-
-                {% if deck.source or deck.source_url %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Source
-                    <span>
-                        {% if deck.source %}
-                            <a href="{{ deck.source_url }}">{{ deck.source }}</a>
-                        {% else %}
-                            <a href="{{ deck.source_url }}">Link</a>
+    <!-- Sideboard (always in a new table in the second column) -->
+    {% if deck.cardsideboard_set.all %}
+        <h5 class="mt-3">Sideboard</h5>
+        <table style="width:100%">
+            {% for sideboard_item in deck.cardsideboard_set.all %}
+                <tr>
+                    <td>{{ sideboard_item.quantity }}</td>
+                    <td>
+                        <div class="position-relative">
+                            <a href="{% url 'card_detail' sideboard_item.card.pk %}" class="link-body-emphasis text-decoration-none hover-link" data-image-url="{{ sideboard_item.card.img_url }}">
+                                {{ sideboard_item.card.name }}
+                            </a>
+                            <div class="hover-image">
+                                <!-- Card image is created here when link above is hovered -->
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-end">{{ sideboard_item.card.get_mana_cost_html|safe }}</td>
+                    <td class="text-end">
+                        {% if not sideboard_item.card.is_basic_land %}
+                            {% if sideboard_item.card.best_price.tix < 0.004 %}
+                                <.01
+                            {% else %}
+                                {{ sideboard_item.card.best_price.tix|floatformat:2 }}
+                            {% endif %}
                         {% endif %}
-                    </span>
-                </li>
-                {% endif %}
-
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Price
-                    <span>
-                        {{ deck.get_price.mainboard|floatformat:2 }} + {{ deck.get_price.sideboard|floatformat:2 }} = {{ deck.get_price.total|floatformat:2 }} tix
-                    </span>
-                </li>
-
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Actions
-                    <div class="btn-group btn-group-sm" role="group" aria-label="Deck actions">
-                        {% if user.is_authenticated %}
-                            <a class="btn btn-outline-primary" href="{% url 'admin:mtg_decks_deck_change' deck.pk %}" role="button" target="_blank">Edit</a>
-                        {% endif %}
-                        <a class="btn btn-outline-primary" href="{% url 'download_deck_txt' deck.pk %}" role="button">
-                            &nbsp;
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
-                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
-                            </svg> 
-                            &nbsp;                             
-                        </a>
-                        <button type="button" class="btn btn-outline-primary" 
-                            hx-get="{% url 'copy_decklist' deck.pk %}" hx-target="#decklist-text" hx-swap="innerHTML"
-                            hx-on:htmx:after-request="copyDecklist(); this.innerText='Copied!'">
-                            &nbsp;
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
-                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
-                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
-                            </svg> 
-                            &nbsp;                         
-                        </button>
-                    </div>
-                </li>
-            </ul>
-              
-        </div>
-
-    </div>
-    
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
 </div>

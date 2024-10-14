@@ -26,7 +26,86 @@
 
     <!-- Card body - decklist -->
     <div class="card-body">
-        {% include 'mtg_decks/partials/decklist_by_type.html' %}
+
+        <div class="row">
+            <!-- Decklist (first two columns)-->
+            {% include 'mtg_decks/partials/decklist_by_type.html' %}
+                    
+        
+            <!-- Analysis and actions -->
+            <div class="col-md-4 mt-3 mt-md-0">
+                <!-- CMC plot -->
+                <div class="mb-4">
+                    {{ deck.cmc_chart|safe }}
+                </div>
+        
+                <!-- Info and actions -->
+                <div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Created
+                            <span>{{ deck.created_at|date:"Y/m/d" }}</span>
+                        </li>
+        
+                        <li class="list-group-item d-flex justify-content-between align-items-center data-bs-toggle="tooltip" data-bs-title="Created {{ deck.created_at|date:"Y/m/d" }}"">
+                            Last updated
+                            <span>{{ deck.updated_at|date:"Y/m/d" }}</span>
+                        </li>
+        
+                        {% if deck.source or deck.source_url %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Source
+                            <span>
+                                {% if deck.source %}
+                                    <a href="{{ deck.source_url }}">{{ deck.source }}</a>
+                                {% else %}
+                                    <a href="{{ deck.source_url }}">Link</a>
+                                {% endif %}
+                            </span>
+                        </li>
+                        {% endif %}
+        
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Price
+                            <span>
+                                {{ deck.get_price.mainboard|floatformat:2 }} + {{ deck.get_price.sideboard|floatformat:2 }} = {{ deck.get_price.total|floatformat:2 }} tix
+                            </span>
+                        </li>
+        
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Actions
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Deck actions">
+                                {% if user.is_authenticated %}
+                                    <a class="btn btn-outline-primary" href="{% url 'admin:mtg_decks_deck_change' deck.pk %}" role="button" target="_blank">Edit</a>
+                                {% endif %}
+                                <a class="btn btn-outline-primary" href="{% url 'download_deck_txt' deck.pk %}" role="button">
+                                    &nbsp;
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+                                    </svg> 
+                                    &nbsp;                             
+                                </a>
+                                <button type="button" class="btn btn-outline-primary" 
+                                    hx-get="{% url 'copy_decklist' deck.pk %}" hx-target="#decklist-text" hx-swap="innerHTML"
+                                    hx-on:htmx:after-request="copyDecklist(); this.innerText='Copied!'">
+                                    &nbsp;
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                                        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+                                        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+                                    </svg> 
+                                    &nbsp;                         
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                      
+                </div>
+        
+            </div>
+            
+        </div>
+        
     </div>
     
     <!-- Card footer - tags -->
