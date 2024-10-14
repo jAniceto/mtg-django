@@ -10,6 +10,7 @@ from mtg_decks.models import Deck, Card, update_or_create_deck
 from mtg_decks.forms import DeckFilterForm, DecksJSONUploadForm, CreateTagForm, DeckTagsForm
 from mtg_decks.charts import plot_deck_family_distribution, plot_deck_color_distribution
 import json
+import random
 from io import StringIO
 
 
@@ -90,6 +91,17 @@ def deck(request, pk, slug):
         'deck': deck,
     }
     return render(request, 'mtg_decks/deck-detail.html', context)
+
+
+def deck_random(request):
+    """Choose random deck."""
+    decks = Deck.objects.all()
+    random_deck = random.choice(list(decks))
+    
+    context = {
+        'deck': random_deck,
+    }
+    return render(request, 'mtg_decks/random-deck.html', context)
 
 
 def download_deck_txt(request, deck_pk):

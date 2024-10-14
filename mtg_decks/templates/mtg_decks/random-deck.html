@@ -1,0 +1,24 @@
+{% extends "mtg_decks/base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="container mb-5">
+
+    <div class="mt-5">
+        <a class="btn btn-primary w-100" href="{% url 'deck_random' %}">Get random deck!</a>
+    </div>
+
+    {% include 'mtg_decks/partials/deck-card.html' %}
+
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+
+<script src="{% static 'mtg_decks/js/card-image-hover.js' %}"></script>
+
+{% endblock %}
