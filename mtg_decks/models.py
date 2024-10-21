@@ -382,12 +382,6 @@ class Deck(models.Model):
         if not self.id:
             self.slug = slugify(self.name)
 
-        # Choose a deck cover image (will not work when deck is created, only when updated)
-        try:
-            self.art_url = self.get_deck_art()
-        except ValueError as e:
-            pass
-
         # Call the original save method
         super(Deck, self).save(*args, **kwargs)
 
